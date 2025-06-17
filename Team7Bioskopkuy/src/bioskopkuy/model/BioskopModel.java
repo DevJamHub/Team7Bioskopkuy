@@ -3,18 +3,22 @@ package bioskopkuy.model;
 import bioskopkuy.service.BioskopException;
 import java.text.NumberFormat;
 import java.util.*;
+import java.io.File; // Import ini
 
 public class BioskopModel {
 
+    // Kelas internal untuk merepresentasikan Film
     public static class Film {
         private final String judul;
         private final double hargaDasar;
-        private final List<String> jamTayang;
+        private final List<String> jamTayang; // Jam tayang dalam format HH:mm
+        private String imagePath; // Tambahkan properti untuk path gambar
 
-        public Film(String judul, double hargaDasar) {
+        public Film(String judul, double hargaDasar, String imagePath) { // Sesuaikan konstruktor
             this.judul = judul;
             this.hargaDasar = hargaDasar;
             this.jamTayang = new ArrayList<>();
+            this.imagePath = imagePath; // Inisialisasi imagePath
         }
 
         public String getJudul() {
@@ -26,11 +30,19 @@ public class BioskopModel {
         }
 
         public List<String> getJamTayang() {
-            return Collections.unmodifiableList(jamTayang);
+            return Collections.unmodifiableList(jamTayang); // Mengembalikan unmodifiable list
         }
 
         public void addJamTayang(String jam) {
             this.jamTayang.add(jam);
+        }
+
+        public String getImagePath() {
+            return imagePath;
+        }
+
+        public void setImagePath(String imagePath) {
+            this.imagePath = imagePath;
         }
 
         @Override
@@ -42,7 +54,7 @@ public class BioskopModel {
     private final BioskopDataStore dataStore;
     private Film filmTerpilih;
     private String jamTerpilih;
-    private Set<String> kursiTerpilih;
+    private Set<String> kursiTerpilih; // Menggunakan Set untuk menghindari duplikasi kursi
     private double totalHargaSebelumDiskon;
     private double totalHargaSetelahDiskon;
 
@@ -51,9 +63,10 @@ public class BioskopModel {
 
     public BioskopModel() {
         this.dataStore = new BioskopDataStore();
-        resetTransaksi();
+        resetTransaksi(); // Inisialisasi awal
     }
 
+    // Mengatur ulang semua data transaksi
     public void resetTransaksi() {
         this.filmTerpilih = null;
         this.jamTerpilih = null;
@@ -88,6 +101,7 @@ public class BioskopModel {
         return Collections.unmodifiableSet(kursiTerpilih);
     }
 
+    // Menambahkan kursi ke pilihan
     public void addKursiTerpilih(String kursi) throws BioskopException {
         if (filmTerpilih == null || jamTerpilih == null) {
             throw new BioskopException("Pilih film dan jam tayang terlebih dahulu.");
@@ -99,16 +113,19 @@ public class BioskopModel {
         hitungTotalHarga();
     }
 
+    // Menghapus kursi dari pilihan
     public void removeKursiTerpilih(String kursi) {
         kursiTerpilih.remove(kursi);
         hitungTotalHarga();
     }
 
+    // Mengosongkan semua kursi yang terpilih
     public void clearKursiTerpilih() {
         kursiTerpilih.clear();
         hitungTotalHarga();
     }
 
+    // Menghitung total harga sebelum dan sesudah diskon
     public void hitungTotalHarga() {
         if (filmTerpilih != null) {
             this.totalHargaSebelumDiskon = filmTerpilih.getHargaDasar() * kursiTerpilih.size();
@@ -120,15 +137,18 @@ public class BioskopModel {
         }
     }
 
+    // Mendapatkan total harga sebelum diskon dalam format mata uang
     public String getTotalHargaSebelumDiskonFormatted() {
         NumberFormat formatter = NumberFormat.getInstance(new Locale("id", "ID"));
         return "Rp" + formatter.format(totalHargaSebelumDiskon);
     }
 
+    // Mendapatkan total harga setelah diskon (nilai double)
     public double getTotalHargaAfterDiskon() {
         return totalHargaSetelahDiskon;
     }
 
+    // Mendapatkan total harga setelah diskon dalam format mata uang
     public String getTotalHargaSetelahDiskonFormatted() {
         NumberFormat formatter = NumberFormat.getInstance(new Locale("id", "ID"));
         return "Rp" + formatter.format(totalHargaSetelahDiskon);
@@ -140,7 +160,7 @@ public class BioskopModel {
 
     public void setMetodePembayaranTerpilih(BioskopDataStore.PaymentMethod metodePembayaranTerpilih) {
         this.metodePembayaranTerpilih = metodePembayaranTerpilih;
-        hitungTotalHarga();
+        hitungTotalHarga(); // Hitung ulang harga setelah metode pembayaran dipilih
     }
 
     public double getUangDibayar() {
@@ -159,14 +179,17 @@ public class BioskopModel {
         return (metodePembayaranTerpilih != null) ? metodePembayaranTerpilih.getDiscountDescription() : "Tidak Ada Diskon";
     }
 
+    // Memeriksa status kursi dari data store
     public boolean isKursiTerisi(Film film, String jam, String kursiName) {
         return dataStore.isKursiTerisi(film, jam, kursiName);
     }
 
+    // Mendapatkan semua nama kursi dari data store (untuk visualisasi)
     public List<String> getAllKursiNames() {
         return dataStore.getAllKursiNames();
     }
 
+    // Memproses transaksi pembayaran
     public boolean prosesPembayaran() throws BioskopException {
         if (totalHargaSetelahDiskon <= 0 && kursiTerpilih.isEmpty()) {
             throw new BioskopException("Total harga belum dihitung atau tidak valid. Silakan pilih film dan kursi.");
@@ -178,19 +201,23 @@ public class BioskopModel {
             throw new BioskopException("Data transaksi tidak lengkap. Silakan ulangi proses pemilihan.");
         }
 
+        // Tandai kursi sebagai terisi di data store
         dataStore.tandaiKursiTerisi(filmTerpilih, jamTerpilih, kursiTerpilih);
         return true;
     }
 
-    public void addFilm(String judul, double harga, String jamTayang) throws BioskopException {
-        Film newFilm = new Film(judul, harga);
+    // --- Metode untuk manajemen admin ---
+
+    // Menambah film (delegasi ke dataStore) - sesuaikan dengan imagePath
+    public void addFilm(String judul, double harga, String jamTayang, String imagePath) throws BioskopException {
+        Film newFilm = new Film(judul, harga, imagePath); // Lewatkan imagePath
         String[] jams = jamTayang.split(",");
         if (jams.length == 0 || (jams.length == 1 && jams[0].trim().isEmpty())) {
             throw new BioskopException("Jam tayang tidak boleh kosong.");
         }
         for (String jam : jams) {
             String trimmedJam = jam.trim();
-            if (!trimmedJam.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
+            if (!trimmedJam.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) { // Validasi format HH:mm
                 throw new BioskopException("Format jam tayang tidak valid: " + trimmedJam + ". Gunakan HH:mm (misal: 12:00, 14:30).");
             }
             newFilm.addJamTayang(trimmedJam);
@@ -198,30 +225,34 @@ public class BioskopModel {
         dataStore.addFilm(newFilm);
     }
 
+    // Menghapus film (delegasi ke dataStore)
     public void removeFilm(Film film) throws BioskopException {
         dataStore.removeFilm(film);
     }
 
+    // Mendapatkan daftar metode pembayaran (delegasi ke dataStore)
     public List<BioskopDataStore.PaymentMethod> getDaftarMetodePembayaran() {
         return dataStore.getDaftarMetodePembayaran();
     }
 
+    // Menambah metode pembayaran (delegasi ke dataStore)
     public void addMetodePembayaran(String name, int discountPercent, String discountDescription) throws BioskopException {
         dataStore.addMetodePembayaran(name, discountPercent, discountDescription);
     }
 
+    // Menghapus metode pembayaran (delegasi ke dataStore)
     public void removeMetodePembayaran(BioskopDataStore.PaymentMethod methodToRemove) throws BioskopException {
         dataStore.removeMetodePembayaran(methodToRemove);
     }
 
+    // Memperbarui metode pembayaran (delegasi ke dataStore)
     public void updateMetodePembayaran(BioskopDataStore.PaymentMethod originalMethod, String newName, int newDiscountPercent, String newDiscountDescription) throws BioskopException {
         BioskopDataStore.PaymentMethod updatedMethod = dataStore.updateMetodePembayaran(originalMethod, newName, newDiscountPercent, newDiscountDescription);
 
+        // Jika metode pembayaran yang sedang aktif di model diupdate, pastikan model memegang referensi yang benar
         if (metodePembayaranTerpilih == originalMethod) {
-            setMetodePembayaranTerpilih(updatedMethod);
+            setMetodePembayaranTerpilih(updatedMethod); // Mengupdate referensi
         }
-        hitungTotalHarga();
+        hitungTotalHarga(); // Hitung ulang harga jika ada perubahan diskon
     }
 }
-
-//cek

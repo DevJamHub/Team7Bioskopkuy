@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image; // Import ini
+import javafx.scene.image.ImageView; // Import ini
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import java.io.File; // Import ini
 import java.util.List;
 
 public class FilmSelectionView {
@@ -34,11 +37,12 @@ public class FilmSelectionView {
     private void initialize() {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(25));
+        // Latar belakang dengan gradien
         root.setStyle("-fx-background-color: linear-gradient(to top left, #5AAAA0, #7BD4C6);");
 
         HBox topPanel = new HBox(20);
         topPanel.setAlignment(Pos.CENTER_LEFT);
-        Button backButton = getBackButtonStyled();
+        Button backButton = getBackButtonStyled(); // Menggunakan metode untuk gaya tombol kembali
         Label titleLabel = new Label("Pilih Film dan Jam Tayang");
         titleLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 28));
         titleLabel.setTextFill(Color.web("#2C3E50"));
@@ -46,29 +50,32 @@ public class FilmSelectionView {
         root.setTop(topPanel);
         BorderPane.setMargin(topPanel, new Insets(0, 0, 25, 0));
 
-        filmListPanel = new VBox(20);
+        filmListPanel = new VBox(20); // Spasi antar kartu film
         filmListPanel.setAlignment(Pos.TOP_CENTER);
         filmListPanel.setPadding(new Insets(25));
-        filmListPanel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
+        // Gaya untuk panel daftar film
+        filmListPanel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" + // Background putih semi-transparan
                 "-fx-background-radius: 15px;" +
                 "-fx-border-radius: 15px;" +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);");
 
-        ScrollPane scrollPane = new ScrollPane(filmListPanel);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        ScrollPane scrollPane = new ScrollPane(filmListPanel); // Tambahkan ScrollPane
+        scrollPane.setFitToWidth(true); // Biarkan konten mengisi lebar scrollpane
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;"); // Hapus border default scrollpane
 
-        root.setCenter(scrollPane);
+        root.setCenter(scrollPane); // Set ScrollPane sebagai center root
 
         scene = new Scene(root, 850, 650);
     }
 
+    // Metode terpisah untuk membuat tombol kembali dengan gaya yang konsisten
     private Button getBackButtonStyled() {
         Button backButton = new Button("Kembali");
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        // Efek hover
+        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> {
             if (controller.isAdminLoggedIn()) {
                 controller.kembaliKeAdminDashboard();
@@ -92,19 +99,52 @@ public class FilmSelectionView {
         }
 
         for (BioskopModel.Film film : films) {
-            VBox filmEntry = new VBox(12);
-            filmEntry.setAlignment(Pos.CENTER_LEFT);
-            filmEntry.setPadding(new Insets(15));
-            filmEntry.setStyle("-fx-background-color: #E0F2F1;" +
+            HBox filmCard = new HBox(15); // Menggunakan HBox untuk menampung gambar dan info film
+            filmCard.setAlignment(Pos.CENTER_LEFT);
+            filmCard.setPadding(new Insets(15));
+            filmCard.setStyle("-fx-background-color: #E0F2F1;" +
                     "-fx-background-radius: 10px;" +
                     "-fx-border-radius: 10px;" +
                     "-fx-border-color: #5AAAA0;" +
                     "-fx-border-width: 1px;" +
                     "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 3);");
 
-            Label filmTitleLabel = new Label(film.getJudul() + " - Rp" + String.format("%,.0f", film.getHargaDasar()) + "/kursi");
+            ImageView posterImageView = new ImageView();
+            posterImageView.setFitWidth(100); // Ukuran poster
+            posterImageView.setFitHeight(150);
+            posterImageView.setPreserveRatio(true);
+            posterImageView.setStyle("-fx-border-color: #B2D8D3; -fx-border-width: 1px;"); // Border untuk gambar
+
+            if (film.getImagePath() != null && !film.getImagePath().isEmpty()) {
+                try {
+                    // Muat gambar dari path lokal
+                    File file = new File(film.getImagePath());
+                    if (file.exists()) {
+                        Image image = new Image(file.toURI().toString());
+                        posterImageView.setImage(image);
+                    } else {
+                        System.err.println("Gambar tidak ditemukan di path: " + film.getImagePath());
+                        posterImageView.setImage(null); // Tampilkan kosong jika gambar tidak ada
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error loading image for " + film.getJudul() + ": " + e.getMessage());
+                    posterImageView.setImage(null);
+                }
+            } else {
+                posterImageView.setImage(null); // Tidak ada gambar jika path kosong
+            }
+
+
+            VBox filmInfo = new VBox(8); // VBox untuk judul, harga, dan jam tayang
+            filmInfo.setAlignment(Pos.CENTER_LEFT);
+
+            Label filmTitleLabel = new Label(film.getJudul());
             filmTitleLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
             filmTitleLabel.setTextFill(Color.web("#3A6D65"));
+
+            Label filmPriceLabel = new Label("Harga: Rp" + String.format("%,.0f", film.getHargaDasar()) + "/kursi");
+            filmPriceLabel.setFont(Font.font("Verdana", 16));
+            filmPriceLabel.setTextFill(Color.web("#5C6F7E"));
 
             HBox jamTayangButtons = new HBox(15);
             jamTayangButtons.setAlignment(Pos.CENTER_LEFT);
@@ -127,21 +167,22 @@ public class FilmSelectionView {
                             "-fx-background-radius: 5px;" +
                             "-fx-border-radius: 5px;" +
                             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);");
-                    jamButton.setOnMouseEntered(_ -> jamButton.setStyle(jamButton.getStyle() + "-fx-background-color: #A3D8D0; -fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-                    jamButton.setOnMouseExited(_ -> jamButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"));
+                    jamButton.setOnMouseEntered(e -> jamButton.setStyle(jamButton.getStyle() + "-fx-background-color: #A3D8D0; -fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+                    jamButton.setOnMouseExited(e -> jamButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"));
 
                     jamButton.setOnAction(_ -> controller.pilihFilmDanJam(film, jam));
                     jamTayangButtons.getChildren().add(jamButton);
                 }
             }
-            filmEntry.getChildren().addAll(filmTitleLabel, jamTayangButtons);
-            filmListPanel.getChildren().add(filmEntry);
+            filmInfo.getChildren().addAll(filmTitleLabel, filmPriceLabel, jamTayangButtons);
+            filmCard.getChildren().addAll(posterImageView, filmInfo); // Tambahkan poster ke kartu
+            filmListPanel.getChildren().add(filmCard);
         }
     }
 
     public void showView() {
         stage.setTitle("BioskopKuy! - Pilih Film");
-        refreshFilmList();
+        refreshFilmList(); // Pastikan daftar film diperbarui saat view ditampilkan
         stage.setScene(scene);
         stage.show();
     }
