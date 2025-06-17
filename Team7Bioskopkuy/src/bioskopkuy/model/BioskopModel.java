@@ -1,10 +1,11 @@
 package bioskopkuy.model;
 
 import bioskopkuy.service.BioskopException;
-import javafx.scene.image.Image; // Import ini untuk kelas Image
+import javafx.scene.image.Image;
 import java.text.NumberFormat;
 import java.util.*;
-// import java.io.File; // Tidak diperlukan untuk fungsionalitas ini, bisa dihapus
+import java.io.FileInputStream; // Import for FileInputStream
+import java.io.File; // Import for File
 
 public class BioskopModel {
 
@@ -18,16 +19,20 @@ public class BioskopModel {
         // --- Variabel statis untuk jalur default absolut ---
         // Ganti ini dengan jalur absolut yang benar di komputer Anda
         // Pastikan ekstensi file sesuai (misalnya .jpeg atau .png)
+        // Contoh untuk macOS/Linux: "file:///Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/login/images/default_poster.jpeg"
+        // Contoh untuk Windows: "file:///C:/Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/login/images/default_poster.jpeg"
         private static final String ABSOLUTE_DEFAULT_IMAGE_PATH = "file:///Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/login/images/default_poster.jpeg";
 
-        public Film(String judul, double hargaDasar, String imagePath) { // Sesuaikan konstruktor
+        public Film(String judul, double hargaDasar, String imagePath) {
             this.judul = judul;
             this.hargaDasar = hargaDasar;
             this.jamTayang = new ArrayList<>();
-            // Jika imagePath yang diberikan null atau kosong, gunakan jalur absolut default
+            // Jika imagePath yang diberikan null atau kosong, gunakan jalur default absolut
             if (imagePath == null || imagePath.isEmpty()) {
                 this.imagePath = ABSOLUTE_DEFAULT_IMAGE_PATH;
             } else {
+                // Pastikan imagePath yang masuk ke sini adalah jalur file system yang benar.
+                // Jika ini datang dari FileChooser, itu sudah path absolut.
                 this.imagePath = imagePath;
             }
         }
@@ -41,12 +46,12 @@ public class BioskopModel {
         }
 
         public List<String> getJamTayang() {
-            return Collections.unmodifiableList(jamTayang); // Mengembalikan unmodifiable list
+            return Collections.unmodifiableList(jamTayang);
         }
 
         public void addJamTayang(String jam) {
             this.jamTayang.add(jam);
-            Collections.sort(this.jamTayang); // Opsional: urutkan jam tayang
+            Collections.sort(this.jamTayang);
         }
 
         public String getImagePath() {
@@ -55,26 +60,75 @@ public class BioskopModel {
 
         /**
          * Mengembalikan objek Image untuk poster film ini.
-         * Akan mencoba memuat dari imagePath yang tersimpan.
-         * Jika gagal, akan mencoba memuat dari jalur default absolut.
+         * Akan mencoba memuat dari imagePath yang tersimpan menggunakan FileInputStream untuk menghindari caching.
+         * Jika gagal atau imagePath tidak valid, akan mencoba memuat dari jalur default absolut.
          *
          * @return Objek Image untuk poster, atau null jika bahkan gambar default pun gagal dimuat.
          */
-        public javafx.scene.image.Image getPosterImage() { // Perubahan tipe kembalian ke javafx.scene.image.Image
-            try {
-                // Memuat gambar menggunakan jalur yang tersimpan (bisa absolut)
-                return new Image(this.imagePath);
-            } catch (Exception e) {
-                System.err.println("Gagal memuat gambar untuk film '" + judul + "' dari jalur: " + this.imagePath + ". Error: " + e.getMessage());
-                // Fallback: Jika gambar spesifik atau yang telah diset gagal dimuat,
-                // coba memuat gambar default absolut (sekali lagi)
+        public javafx.scene.image.Image getPosterImage() {
+            Image loadedImage = null;
+            // Prioritas 1: Coba muat dari imagePath spesifik film
+            if (this.imagePath != null && !this.imagePath.isEmpty()) {
                 try {
-                    return new Image(ABSOLUTE_DEFAULT_IMAGE_PATH);
-                } catch (Exception ex) {
-                    System.err.println("Gagal memuat gambar fallback default absolut. Error: " + ex.getMessage());
-                    return null; // Jika bahkan gambar default gagal, kembalikan null
+                    // Konversi URL path ke File path jika diperlukan, atau langsung gunakan jika sudah path File
+                    String filePath = this.imagePath;
+                    if (filePath.startsWith("file:///")) { // Jika formatnya URL file
+                        filePath = filePath.substring(7); // Hapus "file:///"
+                        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                            filePath = filePath.replaceFirst("^/", ""); // Hapus slash pertama untuk Windows jika ada
+                        }
+                    } else if (filePath.startsWith("file:/")) { // Untuk jalur Windows yang mungkin hanya satu slash
+                        filePath = filePath.substring(5);
+                        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                            filePath = filePath.replaceFirst("^/", "");
+                        }
+                    }
+
+                    File file = new File(filePath);
+                    if (file.exists() && file.isFile()) {
+                        try (FileInputStream fis = new FileInputStream(file)) {
+                            loadedImage = new Image(fis);
+                        }
+                    } else {
+                        System.err.println("File poster tidak ditemukan atau bukan file valid: " + filePath + " untuk film: " + judul);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Gagal memuat gambar untuk film '" + judul + "' dari jalur: " + this.imagePath + ". Error: " + e.getMessage());
                 }
             }
+
+            // Jika loadedImage masih null (gagal memuat dari imagePath film)
+            if (loadedImage == null) {
+                System.out.println("Mencoba memuat gambar default untuk film '" + judul + "'...");
+                // Prioritas 2: Coba muat dari jalur default absolut
+                try {
+                    String defaultFilePath = ABSOLUTE_DEFAULT_IMAGE_PATH;
+                    if (defaultFilePath.startsWith("file:///")) {
+                        defaultFilePath = defaultFilePath.substring(7);
+                        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                            defaultFilePath = defaultFilePath.replaceFirst("^/", "");
+                        }
+                    } else if (defaultFilePath.startsWith("file:/")) {
+                        defaultFilePath = defaultFilePath.substring(5);
+                        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                            defaultFilePath = defaultFilePath.replaceFirst("^/", "");
+                        }
+                    }
+
+                    File defaultFile = new File(defaultFilePath);
+                    if (defaultFile.exists() && defaultFile.isFile()) {
+                        try (FileInputStream fis = new FileInputStream(defaultFile)) {
+                            loadedImage = new Image(fis);
+                        }
+                    } else {
+                        System.err.println("File default poster tidak ditemukan atau bukan file valid: " + defaultFilePath);
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Gagal memuat gambar fallback default absolut. Error: " + ex.getMessage());
+                }
+            }
+
+            return loadedImage; // Mengembalikan gambar yang berhasil dimuat atau null
         }
 
         @Override
