@@ -36,15 +36,7 @@ public class MainView {
         // Latar belakang dengan gradien yang menarik
         root.setStyle("-fx-background-color: linear-gradient(to bottom right, #3A6D65, #5AAAA0);");
 
-        VBox content = new VBox(25); // Spasi vertikal antar elemen
-        content.setAlignment(Pos.CENTER);
-        content.setPadding(new Insets(60)); // Padding di sekitar konten
-        // Gaya untuk kontainer utama login
-        content.setStyle("-fx-background-color: rgba(255, 255, 255, 0.95);" + // Putih semi-transparan
-                "-fx-background-radius: 20px;" + // Sudut membulat
-                "-fx-border-radius: 20px;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0, 0, 8);" + // Efek bayangan
-                "-fx-padding: 40px;"); // Padding internal
+        VBox content = getVBox();
 
         Label titleLabel = new Label("Selamat Datang di BioskopKuy!");
         titleLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 38)); // Font yang lebih modern
@@ -130,14 +122,27 @@ public class MainView {
                 "-fx-border-radius: 10px;" +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"); // Shadow
         // Efek hover untuk tombol
-        actionButton.setOnMouseEntered(e -> actionButton.setStyle(actionButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        actionButton.setOnMouseExited(e -> actionButton.setStyle(actionButton.getStyle().replace("-fx-scale-y: 1.05; -fx-scale-x: 1.05;", "")));
+        actionButton.setOnMouseEntered(_ -> actionButton.setStyle(actionButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        actionButton.setOnMouseExited(_ -> actionButton.setStyle(actionButton.getStyle().replace("-fx-scale-y: 1.05; -fx-scale-x: 1.05;", "")));
         actionButton.setOnAction(_ -> handleActionButton());
 
         content.getChildren().addAll(titleLabel, roleLabel, roleComboBox, loginGrid, actionButton);
         root.getChildren().add(content);
 
         scene = new Scene(root, 800, 600); // Ukuran scene
+    }
+
+    private static VBox getVBox() {
+        VBox content = new VBox(25); // Spasi vertikal antar elemen
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(60)); // Padding di sekitar konten
+        // Gaya untuk kontainer utama login
+        content.setStyle("-fx-background-color: rgba(255, 255, 255, 0.95);" + // Putih semi-transparan
+                "-fx-background-radius: 20px;" + // Sudut membulat
+                "-fx-border-radius: 20px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0, 0, 8);" + // Efek bayangan
+                "-fx-padding: 40px;"); // Padding internal
+        return content;
     }
 
     // Menangani aksi tombol "Masuk"

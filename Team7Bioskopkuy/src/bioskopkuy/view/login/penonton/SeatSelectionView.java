@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import java.util.List;
+
 import java.util.Set;
 
 public class SeatSelectionView {
@@ -44,8 +44,8 @@ public class SeatSelectionView {
         Button backButton = new Button("Kembali");
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> controller.kembaliKeFilmSelectionView());
 
         filmJudulLabel = new Label("Film: ");
@@ -100,8 +100,8 @@ public class SeatSelectionView {
                 "-fx-background-radius: 10px;" +
                 "-fx-border-radius: 10px;" +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        lanjutButton.setOnMouseEntered(e -> lanjutButton.setStyle(lanjutButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        lanjutButton.setOnMouseExited(e -> lanjutButton.setStyle(lanjutButton.getStyle().replace("-fx-scale-y: 1.05; -fx-scale-x: 1.05;", "")));
+        lanjutButton.setOnMouseEntered(_ -> lanjutButton.setStyle(lanjutButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        lanjutButton.setOnMouseExited(_ -> lanjutButton.setStyle(lanjutButton.getStyle().replace("-fx-scale-y: 1.05; -fx-scale-x: 1.05;", "")));
         lanjutButton.setOnAction(_ -> controller.lanjutKePembayaran());
 
         bottomPanel.getChildren().addAll(kursiTerpilihLabel, totalHargaLabel, lanjutButton);
@@ -118,7 +118,7 @@ public class SeatSelectionView {
     public void updateKursiGrid() {
         kursiGridPane.getChildren().clear();
 
-        List<String> allKursiNames = controller.getModel().getAllKursiNames();
+        controller.getModel().getAllKursiNames();
         BioskopModel.Film currentFilm = controller.getModel().getFilmTerpilih();
         String currentJam = controller.getModel().getJamTerpilih();
         Set<String> selectedKursi = controller.getModel().getKursiTerpilih();
@@ -143,8 +143,8 @@ public class SeatSelectionView {
                     seatButton.setStyle("-fx-background-color: #FFEB3B; -fx-text-fill: #2C3E50; -fx-border-color: #FFC107; -fx-border-width: 2px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);" + baseStyle.replace("-fx-border-width: 1px;", ""));
                 } else {
                     seatButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #BDC3C7;" + baseStyle);
-                    seatButton.setOnMouseEntered(e -> seatButton.setStyle("-fx-background-color: #F0F0F0; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"));
-                    seatButton.setOnMouseExited(e -> seatButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #BDC3C7;" + baseStyle));
+                    seatButton.setOnMouseEntered(_ -> seatButton.setStyle("-fx-background-color: #F0F0F0; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"));
+                    seatButton.setOnMouseExited(_ -> seatButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #BDC3C7;" + baseStyle));
                 }
 
                 seatButton.setOnAction(_ -> controller.toggleKursiTerpilih(kursiName));

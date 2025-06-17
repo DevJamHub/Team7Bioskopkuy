@@ -46,8 +46,8 @@ public class PaymentInputView {
         Button backButton = new Button("Kembali");
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> controller.kembaliKePaymentSelectionView());
 
         Label titleLabel = new Label("Detail Pembayaran");
@@ -57,16 +57,7 @@ public class PaymentInputView {
         root.setTop(topPanel);
         BorderPane.setMargin(topPanel, new Insets(0, 0, 25, 0));
 
-        VBox centerContent = new VBox(25); // Spasi vertikal antar elemen
-        centerContent.setAlignment(Pos.CENTER);
-        centerContent.setPadding(new Insets(40));
-        // Gaya panel konten
-        centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
-                "-fx-border-color: #5AAAA0;" +
-                "-fx-border-width: 2px;" +
-                "-fx-background-radius: 15px;" +
-                "-fx-border-radius: 15px;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 6);");
+        VBox centerContent = getVBox();
 
         metodePembayaranLabel = new Label("Metode Pembayaran: -");
         metodePembayaranLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -101,8 +92,8 @@ public class PaymentInputView {
         bayarButton.setPrefSize(250, 60);
         // Gaya tombol bayar
         bayarButton.setStyle("-fx-background-color: #28A745; -fx-text-fill: white; -fx-border-color: #218838; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        bayarButton.setOnMouseEntered(e -> bayarButton.setStyle(bayarButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        bayarButton.setOnMouseExited(e -> bayarButton.setStyle("-fx-background-color: #28A745; -fx-text-fill: white; -fx-border-color: #218838; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        bayarButton.setOnMouseEntered(_ -> bayarButton.setStyle(bayarButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        bayarButton.setOnMouseExited(_ -> bayarButton.setStyle("-fx-background-color: #28A745; -fx-text-fill: white; -fx-border-color: #218838; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         bayarButton.setOnAction(_ -> handlePembayaran());
 
         centerContent.getChildren().addAll(
@@ -118,6 +109,20 @@ public class PaymentInputView {
 
         scene = new Scene(root, 850, 700);
     } // <-- Ini adalah penutup untuk metode initialize()
+
+    private static VBox getVBox() {
+        VBox centerContent = new VBox(25); // Spasi vertikal antar elemen
+        centerContent.setAlignment(Pos.CENTER);
+        centerContent.setPadding(new Insets(40));
+        // Gaya panel konten
+        centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
+                "-fx-border-color: #5AAAA0;" +
+                "-fx-border-width: 2px;" +
+                "-fx-background-radius: 15px;" +
+                "-fx-border-radius: 15px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 6);");
+        return centerContent;
+    }
 
     public void setTotalHargaDisplay(String totalHargaFormatted) {
         this.totalHargaLabel.setText("Total Bayar: " + totalHargaFormatted);

@@ -15,7 +15,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import java.util.List;
-import java.util.Optional;
 
 public class FilmManagementView {
     private final BioskopController controller;
@@ -45,8 +44,8 @@ public class FilmManagementView {
         Button backButton = new Button("Kembali");
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> controller.kembaliKeAdminDashboard());
 
         Label titleLabel = new Label("Manajemen Film Bioskop");
@@ -115,8 +114,8 @@ public class FilmManagementView {
         tambahFilmButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         tambahFilmButton.setPrefSize(200, 50);
         tambahFilmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        tambahFilmButton.setOnMouseEntered(e -> tambahFilmButton.setStyle(tambahFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        tambahFilmButton.setOnMouseExited(e -> tambahFilmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        tambahFilmButton.setOnMouseEntered(_ -> tambahFilmButton.setStyle(tambahFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        tambahFilmButton.setOnMouseExited(_ -> tambahFilmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         tambahFilmButton.setOnAction(_ -> handleTambahFilm());
 
         Label daftarFilmTitle = new Label("Daftar Film Saat Ini");
@@ -146,8 +145,8 @@ public class FilmManagementView {
         hapusFilmButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         hapusFilmButton.setPrefSize(250, 50);
         hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        hapusFilmButton.setOnMouseEntered(e -> hapusFilmButton.setStyle(hapusFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        hapusFilmButton.setOnMouseExited(e -> hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        hapusFilmButton.setOnMouseEntered(_ -> hapusFilmButton.setStyle(hapusFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        hapusFilmButton.setOnMouseExited(_ -> hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         hapusFilmButton.setDisable(true);
 
         filmListView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> hapusFilmButton.setDisable(newSelection == null));
@@ -184,24 +183,6 @@ public class FilmManagementView {
             refreshFilmList(controller.getModel().getDaftarFilm());
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Input Harga Tidak Valid", "Harga harus berupa angka yang valid.");
-        }
-    }
-
-    private void handleHapusFilm() {
-        BioskopModel.Film selectedFilm = filmListView.getSelectionModel().getSelectedItem();
-        if (selectedFilm != null) {
-            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmationAlert.setTitle("Konfirmasi Penghapusan");
-            confirmationAlert.setHeaderText("Hapus Film: " + selectedFilm.getJudul() + "?");
-            confirmationAlert.setContentText("Menghapus film akan juga menghapus semua data kursi yang sudah terisi untuk film ini. Lanjutkan?");
-
-            Optional<ButtonType> result = confirmationAlert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                controller.hapusFilm(selectedFilm);
-                refreshFilmList(controller.getModel().getDaftarFilm());
-            }
-        } else {
-            showAlert(Alert.AlertType.WARNING, "Peringatan", "Pilih film yang ingin dihapus terlebih dahulu.");
         }
     }
 

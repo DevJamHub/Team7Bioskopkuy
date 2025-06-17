@@ -36,8 +36,8 @@ public class AdminDashboardView {
         Button logoutButton = new Button("Logout");
         logoutButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         logoutButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        logoutButton.setOnMouseEntered(e -> logoutButton.setStyle("-fx-background-color: #E57373; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        logoutButton.setOnMouseExited(e -> logoutButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        logoutButton.setOnMouseEntered(_ -> logoutButton.setStyle("-fx-background-color: #E57373; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        logoutButton.setOnMouseExited(_ -> logoutButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         logoutButton.setOnAction(_ -> controller.kembaliKeMainView());
 
         topLeftPanel.getChildren().add(logoutButton);
@@ -63,16 +63,16 @@ public class AdminDashboardView {
         filmManagementButton.setPrefSize(300, 70);
         filmManagementButton.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         filmManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        filmManagementButton.setOnMouseEntered(e -> filmManagementButton.setStyle(filmManagementButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        filmManagementButton.setOnMouseExited(e -> filmManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        filmManagementButton.setOnMouseEntered(_ -> filmManagementButton.setStyle(filmManagementButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        filmManagementButton.setOnMouseExited(_ -> filmManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         filmManagementButton.setOnAction(_ -> controller.tampilFilmManagement());
 
         Button paymentMethodManagementButton = new Button("Manajemen Pembayaran");
         paymentMethodManagementButton.setPrefSize(300, 70);
         paymentMethodManagementButton.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         paymentMethodManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        paymentMethodManagementButton.setOnMouseEntered(e -> paymentMethodManagementButton.setStyle(paymentMethodManagementButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        paymentMethodManagementButton.setOnMouseExited(e -> paymentMethodManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        paymentMethodManagementButton.setOnMouseEntered(_ -> paymentMethodManagementButton.setStyle(paymentMethodManagementButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        paymentMethodManagementButton.setOnMouseExited(_ -> paymentMethodManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         paymentMethodManagementButton.setOnAction(_ -> controller.tampilPaymentMethodManagement());
 
         optionsPanel.getChildren().addAll(

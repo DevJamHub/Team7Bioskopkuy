@@ -47,8 +47,8 @@ public class PaymentMethodManagementView {
         Button backButton = new Button("Kembali");
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> controller.kembaliKeAdminDashboard());
 
         Label titleLabel = new Label("Manajemen Metode Pembayaran");
@@ -146,16 +146,16 @@ public class PaymentMethodManagementView {
         addButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         addButton.setPrefSize(180, 45);
         addButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        addButton.setOnMouseEntered(e -> addButton.setStyle(addButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        addButton.setOnMouseEntered(_ -> addButton.setStyle(addButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        addButton.setOnMouseExited(_ -> addButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
         addButton.setOnAction(_ -> handleAddMethod());
 
         editButton = new Button("Edit Terpilih");
         editButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         editButton.setPrefSize(180, 45);
         editButton.setStyle("-fx-background-color: #FFC107; -fx-text-fill: #2C3E50; -fx-border-color: #FFA000; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        editButton.setOnMouseEntered(e -> editButton.setStyle(editButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        editButton.setOnMouseExited(e -> editButton.setStyle("-fx-background-color: #FFC107; -fx-text-fill: #2C3E50; -fx-border-color: #FFA000; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        editButton.setOnMouseEntered(_ -> editButton.setStyle(editButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        editButton.setOnMouseExited(_ -> editButton.setStyle("-fx-background-color: #FFC107; -fx-text-fill: #2C3E50; -fx-border-color: #FFA000; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
         editButton.setDisable(true);
         editButton.setOnAction(_ -> handleEditMethod());
 
@@ -163,8 +163,8 @@ public class PaymentMethodManagementView {
         deleteButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         deleteButton.setPrefSize(180, 45);
         deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        deleteButton.setOnMouseEntered(e -> deleteButton.setStyle(deleteButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        deleteButton.setOnMouseExited(e -> deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        deleteButton.setOnMouseEntered(_ -> deleteButton.setStyle(deleteButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        deleteButton.setOnMouseExited(_ -> deleteButton.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
         deleteButton.setDisable(true);
         deleteButton.setOnAction(_ -> handleDeleteMethod());
 
@@ -172,8 +172,8 @@ public class PaymentMethodManagementView {
         clearFormButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         clearFormButton.setPrefSize(180, 45);
         clearFormButton.setStyle("-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-border-color: #757575; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        clearFormButton.setOnMouseEntered(e -> clearFormButton.setStyle(clearFormButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        clearFormButton.setOnMouseExited(e -> clearFormButton.setStyle("-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-border-color: #757575; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        clearFormButton.setOnMouseEntered(_ -> clearFormButton.setStyle(clearFormButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        clearFormButton.setOnMouseExited(_ -> clearFormButton.setStyle("-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-border-color: #757575; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
         clearFormButton.setOnAction(_ -> clearFormFields());
 
         buttonPanel.getChildren().addAll(addButton, editButton, deleteButton, clearFormButton);
