@@ -33,10 +33,9 @@ public class FilmManagementView {
     private Button hapusFilmButton;
     private Button tambahFilmButton;
 
-    // Untuk upload gambar
     private ImageView filmImageView;
     private Label imagePathLabel;
-    private String selectedImagePath; // Menyimpan path gambar yang dipilih
+    private String selectedImagePath;
 
     public FilmManagementView(BioskopController controller, Stage stage) {
         this.controller = controller;
@@ -92,7 +91,7 @@ public class FilmManagementView {
         hargaFilmField.setPrefWidth(300);
         hargaFilmField.setStyle("-fx-font-size: 16px; -fx-padding: 8px; -fx-background-color: #F8F8F8; -fx-border-color: #B2D8D3; -fx-border-width: 1px; -fx-border-radius: 5px;");
         hargaFilmField.textProperty().addListener((_, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*([.]?\\d{0,2})?")) { // Allow only numbers and one decimal point
+            if (!newValue.matches("\\d*([.]?\\d{0,2})?")) {
                 hargaFilmField.setText(oldValue);
             }
         });
@@ -104,7 +103,6 @@ public class FilmManagementView {
         jamTayangField.setPrefWidth(300);
         jamTayangField.setStyle("-fx-font-size: 16px; -fx-padding: 8px; -fx-background-color: #F8F8F8; -fx-border-color: #B2D8D3; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
-        // --- Penambahan untuk Upload Gambar ---
         Label imageLabel = new Label("Poster Film:");
         imageLabel.setFont(Font.font("Verdana", 17));
 
@@ -117,7 +115,7 @@ public class FilmManagementView {
         imagePathLabel = new Label("Belum ada gambar dipilih.");
         imagePathLabel.setFont(Font.font("Verdana", 12));
         imagePathLabel.setTextFill(Color.GRAY);
-        imagePathLabel.setWrapText(true); // Pastikan label wrap jika path terlalu panjang
+        imagePathLabel.setWrapText(true);
 
         Button uploadImageButton = new Button("Upload Gambar");
         uploadImageButton.setFont(Font.font("Verdana", 16));
@@ -128,7 +126,6 @@ public class FilmManagementView {
 
         VBox imageInputContainer = new VBox(5, filmImageView, imagePathLabel, uploadImageButton);
         imageInputContainer.setAlignment(Pos.CENTER_LEFT);
-        // --- Akhir Penambahan untuk Upload Gambar ---
 
         formGrid.add(judulLabel, 0, 0);
         formGrid.add(judulFilmField, 1, 0);
@@ -137,7 +134,7 @@ public class FilmManagementView {
         formGrid.add(jamTayangLabel, 0, 2);
         formGrid.add(jamTayangField, 1, 2);
         formGrid.add(imageLabel, 0, 3);
-        formGrid.add(imageInputContainer, 1, 3); // Tambahkan container gambar ke grid
+        formGrid.add(imageInputContainer, 1, 3);
 
         tambahFilmButton = new Button("Tambah Film");
         tambahFilmButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -179,12 +176,11 @@ public class FilmManagementView {
                     filmInfoLabel.setText(film.getJudul() + " (Rp" + String.format("%,.0f", film.getHargaDasar()) + "/kursi) - Jam: " + String.join(", ", film.getJamTayang()));
                     if (film.getImagePath() != null && !film.getImagePath().isEmpty()) {
                         try {
-                            // Gunakan File URL untuk gambar lokal
                             Image image = new Image(new File(film.getImagePath()).toURI().toString(), true);
                             cellImageView.setImage(image);
                         } catch (Exception e) {
                             System.err.println("Error loading image for " + film.getJudul() + ": " + e.getMessage());
-                            cellImageView.setImage(null); // Clear image on error
+                            cellImageView.setImage(null);
                         }
                     } else {
                         cellImageView.setImage(null);
@@ -200,7 +196,7 @@ public class FilmManagementView {
         hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
         hapusFilmButton.setOnMouseEntered(_ -> hapusFilmButton.setStyle(hapusFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
         hapusFilmButton.setOnMouseExited(_ -> hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
-        hapusFilmButton.setDisable(true); // Disable by default
+        hapusFilmButton.setDisable(true);
         hapusFilmButton.setOnAction(_ -> handleHapusFilm());
 
         filmListView.getSelectionModel().selectedItemProperty().addListener((_, _, newSelection) -> hapusFilmButton.setDisable(newSelection == null));
@@ -211,11 +207,11 @@ public class FilmManagementView {
         );
         root.setCenter(centerContent);
 
-        scene = new Scene(root, 950, 850); // Ukuran scene lebih besar untuk mengakomodasi gambar
+        scene = new Scene(root, 950, 850);
     }
 
     private static VBox getVBox() {
-        VBox centerContent = new VBox(25); // Spasi antar bagian
+        VBox centerContent = new VBox(25);
         centerContent.setAlignment(Pos.TOP_CENTER);
         centerContent.setPadding(new Insets(30));
         centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
@@ -256,7 +252,7 @@ public class FilmManagementView {
 
     private void handleTambahFilm() {
         String judul = judulFilmField.getText().trim();
-        String hargaText = hargaFilmField.getText().trim().replace(',', '.'); // Handle comma as decimal separator
+        String hargaText = hargaFilmField.getText().trim().replace(',', '.');
         String jamTayang = jamTayangField.getText().trim();
 
         if (judul.isEmpty() || hargaText.isEmpty() || jamTayang.isEmpty()) {
@@ -270,15 +266,14 @@ public class FilmManagementView {
                 showAlert(Alert.AlertType.WARNING, "Harga Invalid", "Harga harus lebih dari nol.");
                 return;
             }
-            // Panggil controller dengan imagePath
             controller.tambahFilm(judul, harga, jamTayang, selectedImagePath);
             judulFilmField.clear();
             hargaFilmField.clear();
             jamTayangField.clear();
-            selectedImagePath = null; // Reset path gambar
-            filmImageView.setImage(null); // Hapus preview gambar
+            selectedImagePath = null;
+            filmImageView.setImage(null);
             imagePathLabel.setText("Belum ada gambar dipilih.");
-            refreshFilmList(controller.getModel().getDaftarFilm()); // Refresh list setelah menambah
+            refreshFilmList(controller.getModel().getDaftarFilm());
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Input Harga Tidak Valid", "Harga harus berupa angka yang valid.");
         }
@@ -295,7 +290,7 @@ public class FilmManagementView {
             Optional<ButtonType> result = confirmationAlert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 controller.hapusFilm(selectedFilm);
-                refreshFilmList(controller.getModel().getDaftarFilm()); // Refresh list setelah menghapus
+                refreshFilmList(controller.getModel().getDaftarFilm());
             }
         } else {
             showAlert(Alert.AlertType.WARNING, "Peringatan", "Pilih film yang ingin dihapus terlebih dahulu.");
@@ -316,9 +311,9 @@ public class FilmManagementView {
 
     public void showView() {
         stage.setTitle("BioskopKuy! - Manajemen Film");
-        refreshFilmList(controller.getModel().getDaftarFilm()); // Pastikan list diperbarui saat view ditampilkan
-        selectedImagePath = null; // Reset image path saat view ditampilkan
-        filmImageView.setImage(null); // Reset preview gambar
+        refreshFilmList(controller.getModel().getDaftarFilm());
+        selectedImagePath = null;
+        filmImageView.setImage(null);
         imagePathLabel.setText("Belum ada gambar dipilih.");
         stage.setScene(scene);
         stage.show();

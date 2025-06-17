@@ -1,7 +1,6 @@
-package bioskopkuy.model; // Pastikan package ini sama dengan BioskopModel.java
+package bioskopkuy.model;
 
 import bioskopkuy.service.BioskopException;
-// import java.io.File; // Tidak diperlukan di sini
 import java.util.*;
 
 public class BioskopDataStore {
@@ -43,9 +42,8 @@ public class BioskopDataStore {
         }
     }
 
-    // Menggunakan BioskopModel.Film (karena definisi Film sekarang ada di sana)
     private final List<BioskopModel.Film> daftarFilm;
-    private final Map<String, Set<String>> kursiTerisiMap; // Key: FilmJudul-JamTayang, Value: Set<KursiName>
+    private final Map<String, Set<String>> kursiTerisiMap;
 
     private List<PaymentMethod> daftarMetodePembayaran;
 
@@ -55,7 +53,6 @@ public class BioskopDataStore {
         initializeDefaultData();
     }
 
-    // Menginisialisasi data film dan metode pembayaran default
     private void initializeDefaultData() {
 
         BioskopModel.Film film1 = new BioskopModel.Film("The Jungle of Basori", 50000.0, null);
@@ -64,7 +61,6 @@ public class BioskopDataStore {
         film1.addJamTayang("16:00");
         film1.addJamTayang("19:00");
         daftarFilm.add(film1);
-
 
         this.daftarMetodePembayaran = new ArrayList<>();
         this.daftarMetodePembayaran.add(new PaymentMethod("Cash", 0, "Tidak Ada Diskon"));
@@ -76,7 +72,6 @@ public class BioskopDataStore {
         return Collections.unmodifiableList(daftarFilm);
     }
 
-    // Menambah film baru - sekarang menerima BioskopModel.Film
     public void addFilm(BioskopModel.Film film) throws BioskopException {
         for (BioskopModel.Film existingFilm : daftarFilm) {
             if (existingFilm.getJudul().equalsIgnoreCase(film.getJudul())) {
@@ -86,13 +81,11 @@ public class BioskopDataStore {
         daftarFilm.add(film);
     }
 
-    // Menghapus film - sekarang menerima BioskopModel.Film
     public void removeFilm(BioskopModel.Film film) throws BioskopException {
         boolean removed = daftarFilm.remove(film);
         if (!removed) {
             throw new BioskopException("Film '" + film.getJudul() + "' tidak ditemukan.");
         }
-        // Hapus juga data kursi terisi untuk film yang dihapus
         List<String> keysToRemove = new ArrayList<>();
         for (String key : kursiTerisiMap.keySet()) {
             if (key.startsWith(film.getJudul() + "-")) {
@@ -104,28 +97,24 @@ public class BioskopDataStore {
         }
     }
 
-    // Membuat kunci unik untuk kombinasi film dan jam tayang - menerima BioskopModel.Film
     private String generateKursiKey(BioskopModel.Film film, String jam) {
         return film.getJudul() + "-" + jam;
     }
 
-    // Memeriksa apakah kursi sudah terisi - menerima BioskopModel.Film
     public boolean isKursiTerisi(BioskopModel.Film film, String jam, String kursiName) {
         String key = generateKursiKey(film, jam);
         Set<String> terisi = kursiTerisiMap.getOrDefault(key, Collections.emptySet());
         return terisi.contains(kursiName);
     }
 
-    // Menandai kursi sebagai terisi setelah pembayaran sukses - menerima BioskopModel.Film
     public void tandaiKursiTerisi(BioskopModel.Film film, String jam, Set<String> kursiNames) {
         String key = generateKursiKey(film, jam);
         kursiTerisiMap.computeIfAbsent(key, _ -> new HashSet<>()).addAll(kursiNames);
     }
 
-    // Metode ini mungkin tidak perlu mengembalikan nilai, hanya sebagai referensi
     public void getAllKursiNames() {
         List<String> allKursi = new ArrayList<>();
-        char[] rows = {'A', 'B', 'C', 'D'}; // Ubah sesuai kebutuhan layout kursi
+        char[] rows = {'A', 'B', 'C', 'D'};
         int colCount = 10;
         for (char rowChar : rows) {
             for (int colIdx = 0; colIdx < colCount; colIdx++) {
@@ -138,7 +127,6 @@ public class BioskopDataStore {
         return Collections.unmodifiableList(daftarMetodePembayaran);
     }
 
-    // Menambah metode pembayaran baru
     public void addMetodePembayaran(String name, int discountPercent, String discountDescription) throws BioskopException {
         if (name.trim().isEmpty()) {
             throw new BioskopException("Nama metode pembayaran tidak boleh kosong.");
@@ -154,14 +142,12 @@ public class BioskopDataStore {
         daftarMetodePembayaran.add(new PaymentMethod(name.trim(), discountPercent, discountDescription.trim()));
     }
 
-    // Menghapus metode pembayaran
     public void removeMetodePembayaran(PaymentMethod methodToRemove) throws BioskopException {
         if (!daftarMetodePembayaran.remove(methodToRemove)) {
             throw new BioskopException("Metode pembayaran '" + methodToRemove.getName() + "' tidak ditemukan.");
         }
     }
 
-    // Memperbarui metode pembayaran yang sudah ada
     public PaymentMethod updateMetodePembayaran(PaymentMethod originalMethod, String newName, int newDiscountPercent, String newDiscountDescription) throws BioskopException {
         if (newName.trim().isEmpty()) {
             throw new BioskopException("Nama metode pembayaran tidak boleh kosong.");
@@ -170,26 +156,22 @@ public class BioskopDataStore {
             throw new BioskopException("Persentase diskon harus antara 0-100.");
         }
 
-        // Cek jika nama baru sudah ada dan bukan metode yang sama
         if (!originalMethod.getName().equalsIgnoreCase(newName.trim())) {
             for (PaymentMethod method : daftarMetodePembayaran) {
                 if (method != originalMethod && method.getName().equalsIgnoreCase(newName.trim())) {
                     throw new BioskopException("Nama metode pembayaran '" + newName + "' sudah digunakan.");
                 }
             }
-            // Jika nama berubah, hapus yang lama dan tambah yang baru
             removeMetodePembayaran(originalMethod);
             addMetodePembayaran(newName, newDiscountPercent, newDiscountDescription);
-            return getPaymentMethodByName(newName); // Kembalikan objek yang baru ditambahkan
+            return getPaymentMethodByName(newName);
         } else {
-            // Jika nama tidak berubah, hanya update properti yang ada
             originalMethod.setDiscountPercent(newDiscountPercent);
             originalMethod.setDiscountDescription(newDiscountDescription.trim());
             return originalMethod;
         }
     }
 
-    // Mendapatkan objek PaymentMethod berdasarkan nama
     public PaymentMethod getPaymentMethodByName(String name) {
         for (PaymentMethod method : daftarMetodePembayaran) {
             if (method.getName().equalsIgnoreCase(name)) {

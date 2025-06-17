@@ -38,7 +38,6 @@ public class BioskopController {
     public BioskopController(BioskopModel model, Stage primaryStage) {
         this.model = model;
 
-        // Inisialisasi semua objek view, meneruskan controller dan stage
         this.mainView = new MainView(this, primaryStage);
         this.filmSelectionView = new FilmSelectionView(this, primaryStage);
         this.seatSelectionView = new SeatSelectionView(this, primaryStage);
@@ -62,16 +61,15 @@ public class BioskopController {
         return adminLoggedIn;
     }
 
-    // Menangani logika login untuk penonton atau admin
     public void handleLogin(String role, String username, String password) {
         if ("Penonton".equals(role)) {
             adminLoggedIn = false;
-            tampilFilmSelection(); // Langsung ke pemilihan film untuk penonton
+            tampilFilmSelection();
         } else if ("Admin Bioskop".equals(role)) {
             if (ADMIN_USERNAME.equals(username) && ADMIN_PASSWORD.equals(password)) {
                 adminLoggedIn = true;
                 showAlert(Alert.AlertType.INFORMATION, "Login Berhasil", "Selamat datang, Admin!");
-                tampilAdminDashboard(); // Ke dashboard admin jika login berhasil
+                tampilAdminDashboard();
             } else {
                 adminLoggedIn = false;
                 showAlert(Alert.AlertType.ERROR, "Login Gagal", "Username atau password salah.");
@@ -79,19 +77,18 @@ public class BioskopController {
         }
     }
 
-    // Metode untuk menampilkan berbagai view
     public void tampilFilmSelection() {
         filmSelectionView.showView();
     }
 
     public void kembaliKeMainView() {
-        model.resetTransaksi(); // Reset transaksi saat kembali ke main view
+        model.resetTransaksi();
         adminLoggedIn = false;
         mainView.showView();
     }
 
     public void kembaliKeFilmSelectionView() {
-        model.clearKursiTerpilih(); // Hapus kursi terpilih saat kembali ke pemilihan film
+        model.clearKursiTerpilih();
         filmSelectionView.showView();
     }
 
@@ -120,11 +117,10 @@ public class BioskopController {
         adminDashboardView.showView();
     }
 
-    // Menangani pemilihan film dan jam tayang oleh penonton
     public void pilihFilmDanJam(BioskopModel.Film film, String jam) {
         model.setFilmTerpilih(film);
         model.setJamTerpilih(jam);
-        model.clearKursiTerpilih(); // Kosongkan kursi terpilih untuk film/jam baru
+        model.clearKursiTerpilih();
 
         seatSelectionView.setFilmJudul(film.getJudul());
         seatSelectionView.updateKursiGrid();
@@ -132,7 +128,6 @@ public class BioskopController {
         seatSelectionView.showView();
     }
 
-    // Menangani pemilihan/pembatalan pemilihan kursi
     public void toggleKursiTerpilih(String kursiName) {
         try {
             if (model.getKursiTerpilih().contains(kursiName)) {
@@ -147,7 +142,6 @@ public class BioskopController {
         }
     }
 
-    // Lanjut dari pemilihan kursi ke pembayaran
     public void lanjutKePembayaran() {
         if (model.getKursiTerpilih().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Peringatan", "Mohon pilih setidaknya satu kursi.");
@@ -156,7 +150,6 @@ public class BioskopController {
         paymentSelectionView.showView();
     }
 
-    // Menangani pemilihan metode pembayaran
     public void pilihMetodePembayaran(BioskopDataStore.PaymentMethod metode) {
         model.setMetodePembayaranTerpilih(metode);
         paymentInputView.setTotalHargaDisplay(model.getTotalHargaSetelahDiskonFormatted());
@@ -164,7 +157,6 @@ public class BioskopController {
         paymentInputView.showView();
     }
 
-    // Memproses pembayaran oleh penonton
     public void prosesPembayaran(double uangDibayar) {
         model.setUangDibayar(uangDibayar);
 
@@ -175,7 +167,6 @@ public class BioskopController {
         loadingAlert.getDialogPane().lookupButton(loadingAlert.getButtonTypes().getFirst()).setVisible(false);
         loadingAlert.show();
 
-        // Simulate a delay for payment processing
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.schedule(() -> {
             Platform.runLater(() -> {
@@ -196,7 +187,7 @@ public class BioskopController {
                                         "Kembalian: Rp" + String.format("%,.0f", (model.getUangDibayar() - model.getTotalHargaAfterDiskon())));
 
                         model.resetTransaksi();
-                        mainView.showView(); // Kembali ke tampilan utama setelah sukses
+                        mainView.showView();
                     }
                 } catch (BioskopException e) {
                     showAlert(Alert.AlertType.ERROR, "Error Pembayaran", e.getMessage());
@@ -206,13 +197,12 @@ public class BioskopController {
                 }
             });
             executor.shutdown();
-        }, 1500, TimeUnit.MILLISECONDS); // Delay 1.5 detik
+        }, 1500, TimeUnit.MILLISECONDS);
     }
 
-    // Metode manajemen film untuk admin - sesuaikan dengan imagePath
     public void tambahFilm(String judul, double harga, String jamTayang, String imagePath) {
         try {
-            model.addFilm(judul, harga, jamTayang, imagePath); // Lewatkan imagePath
+            model.addFilm(judul, harga, jamTayang, imagePath);
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Film '" + judul + "' berhasil ditambahkan.");
         } catch (BioskopException e) {
             showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
@@ -228,7 +218,6 @@ public class BioskopController {
         }
     }
 
-    // Metode manajemen metode pembayaran untuk admin
     public List<BioskopDataStore.PaymentMethod> getDaftarMetodePembayaran() {
         return model.getDaftarMetodePembayaran();
     }
@@ -237,8 +226,8 @@ public class BioskopController {
         try {
             model.addMetodePembayaran(name, discountPercent, discountDescription);
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Metode pembayaran '" + name + "' berhasil ditambahkan.");
-            paymentMethodManagementView.refreshMetodePembayaranList(); // Refresh list di view
-            paymentSelectionView.updateMetodePembayaranButtons(); // Update tombol di view penonton
+            paymentMethodManagementView.refreshMetodePembayaranList();
+            paymentSelectionView.updateMetodePembayaranButtons();
         } catch (BioskopException e) {
             showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
         }
@@ -266,7 +255,6 @@ public class BioskopController {
         }
     }
 
-    // Utility method for showing alerts
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

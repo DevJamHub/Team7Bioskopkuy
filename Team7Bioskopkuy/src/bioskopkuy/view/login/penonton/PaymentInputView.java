@@ -65,15 +65,15 @@ public class PaymentInputView {
 
         totalHargaSebelumDiskonLabel = new Label("Harga Awal: Rp0");
         totalHargaSebelumDiskonLabel.setFont(Font.font("Verdana", 18));
-        totalHargaSebelumDiskonLabel.setTextFill(Color.web("#5C6F7E")); // Warna teks abu-abu gelap
+        totalHargaSebelumDiskonLabel.setTextFill(Color.web("#5C6F7E"));
 
         diskonDisplayLabel = new Label("Diskon: 0% (Tidak Ada Diskon)");
         diskonDisplayLabel.setFont(Font.font("Verdana", 17));
-        diskonDisplayLabel.setTextFill(Color.GREEN); // Tetap hijau untuk diskon
+        diskonDisplayLabel.setTextFill(Color.GREEN);
 
         totalHargaLabel = new Label("Total Bayar: Rp0");
         totalHargaLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 26));
-        totalHargaLabel.setTextFill(Color.web("#2C3E50")); // Lebih menonjol
+        totalHargaLabel.setTextFill(Color.web("#2C3E50"));
 
         Label uangDibayarLabel = new Label("Jumlah Uang Dibayar (Rp):");
         uangDibayarLabel.setFont(Font.font("Verdana", 19));
@@ -82,7 +82,7 @@ public class PaymentInputView {
         uangDibayarField.setPrefWidth(250);
         uangDibayarField.setStyle("-fx-font-size: 18px; -fx-padding: 10px; -fx-background-color: #F8F8F8; -fx-border-color: #B2D8D3; -fx-border-width: 1px; -fx-border-radius: 5px;");
         uangDibayarField.textProperty().addListener((_, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*([.]?\\d{0,2})?")) { // Allow numbers and one decimal point
+            if (!newValue.matches("\\d*([.]?\\d{0,2})?")) {
                 uangDibayarField.setText(oldValue);
             }
         });
@@ -90,7 +90,6 @@ public class PaymentInputView {
         Button bayarButton = new Button("Bayar Sekarang");
         bayarButton.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
         bayarButton.setPrefSize(250, 60);
-        // Gaya tombol bayar
         bayarButton.setStyle("-fx-background-color: #28A745; -fx-text-fill: white; -fx-border-color: #218838; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
         bayarButton.setOnMouseEntered(_ -> bayarButton.setStyle(bayarButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
         bayarButton.setOnMouseExited(_ -> bayarButton.setStyle("-fx-background-color: #28A745; -fx-text-fill: white; -fx-border-color: #218838; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
@@ -108,13 +107,12 @@ public class PaymentInputView {
         root.setCenter(centerContent);
 
         scene = new Scene(root, 850, 700);
-    } // <-- Ini adalah penutup untuk metode initialize()
+    }
 
     private static VBox getVBox() {
-        VBox centerContent = new VBox(25); // Spasi vertikal antar elemen
+        VBox centerContent = new VBox(25);
         centerContent.setAlignment(Pos.CENTER);
         centerContent.setPadding(new Insets(40));
-        // Gaya panel konten
         centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
                 "-fx-border-color: #5AAAA0;" +
                 "-fx-border-width: 2px;" +
@@ -135,7 +133,7 @@ public class PaymentInputView {
         }
 
         controller.getModel().hitungTotalHarga();
-    } // <-- Ini adalah penutup untuk metode setTotalHargaDisplay()
+    }
 
     public void updateDiskonDisplay(int persen, String keterangan) {
         if (persen > 0) {
@@ -176,7 +174,7 @@ public class PaymentInputView {
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 controller.prosesPembayaran(uangDibayar);
-                uangDibayarField.clear(); // Bersihkan field setelah pembayaran
+                uangDibayarField.clear();
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Pembayaran Dibatalkan", "Pembayaran telah dibatalkan.");
             }
@@ -196,10 +194,9 @@ public class PaymentInputView {
 
     public void showView() {
         stage.setTitle("BioskopKuy! - Pembayaran");
-        // Pastikan info pembayaran terupdate saat view ditampilkan
         setTotalHargaDisplay(controller.getModel().getTotalHargaSetelahDiskonFormatted());
         updateDiskonDisplay(controller.getModel().getDiskonPersenDariMetodeTerpilih(), controller.getModel().getDiskonKeteranganDariMetodeTerpilih());
         stage.setScene(scene);
         stage.show();
     }
-} // <-- Ini adalah penutup untuk kelas PaymentInputView
+}
