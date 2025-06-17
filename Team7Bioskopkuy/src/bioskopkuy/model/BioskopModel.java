@@ -1,9 +1,10 @@
 package bioskopkuy.model;
 
 import bioskopkuy.service.BioskopException;
+import javafx.scene.image.Image; // Import ini untuk kelas Image
 import java.text.NumberFormat;
 import java.util.*;
-import java.io.File; // Import ini
+// import java.io.File; // Tidak diperlukan untuk fungsionalitas ini, bisa dihapus
 
 public class BioskopModel {
 
@@ -12,13 +13,23 @@ public class BioskopModel {
         private final String judul;
         private final double hargaDasar;
         private final List<String> jamTayang; // Jam tayang dalam format HH:mm
-        private String imagePath; // Tambahkan properti untuk path gambar
+        private String imagePath; // Properti untuk path gambar
+
+        // --- Variabel statis untuk jalur default absolut ---
+        // Ganti ini dengan jalur absolut yang benar di komputer Anda
+        // Pastikan ekstensi file sesuai (misalnya .jpeg atau .png)
+        private static final String ABSOLUTE_DEFAULT_IMAGE_PATH = "file:///Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/login/images/default_poster.jpeg";
 
         public Film(String judul, double hargaDasar, String imagePath) { // Sesuaikan konstruktor
             this.judul = judul;
             this.hargaDasar = hargaDasar;
             this.jamTayang = new ArrayList<>();
-            this.imagePath = imagePath; // Inisialisasi imagePath
+            // Jika imagePath yang diberikan null atau kosong, gunakan jalur absolut default
+            if (imagePath == null || imagePath.isEmpty()) {
+                this.imagePath = ABSOLUTE_DEFAULT_IMAGE_PATH;
+            } else {
+                this.imagePath = imagePath;
+            }
         }
 
         public String getJudul() {
@@ -35,6 +46,7 @@ public class BioskopModel {
 
         public void addJamTayang(String jam) {
             this.jamTayang.add(jam);
+            Collections.sort(this.jamTayang); // Opsional: urutkan jam tayang
         }
 
         public String getImagePath() {
@@ -42,7 +54,36 @@ public class BioskopModel {
         }
 
         public void setImagePath(String imagePath) {
-            this.imagePath = imagePath;
+            // Logika untuk default path juga diterapkan saat setImagePath
+            if (imagePath == null || imagePath.isEmpty()) {
+                this.imagePath = ABSOLUTE_DEFAULT_IMAGE_PATH;
+            } else {
+                this.imagePath = imagePath;
+            }
+        }
+
+        /**
+         * Mengembalikan objek Image untuk poster film ini.
+         * Akan mencoba memuat dari imagePath yang tersimpan.
+         * Jika gagal, akan mencoba memuat dari jalur default absolut.
+         *
+         * @return Objek Image untuk poster, atau null jika bahkan gambar default pun gagal dimuat.
+         */
+        public javafx.scene.image.Image getPosterImage() { // Perubahan tipe kembalian ke javafx.scene.image.Image
+            try {
+                // Memuat gambar menggunakan jalur yang tersimpan (bisa absolut)
+                return new Image(this.imagePath);
+            } catch (Exception e) {
+                System.err.println("Gagal memuat gambar untuk film '" + judul + "' dari jalur: " + this.imagePath + ". Error: " + e.getMessage());
+                // Fallback: Jika gambar spesifik atau yang telah diset gagal dimuat,
+                // coba memuat gambar default absolut (sekali lagi)
+                try {
+                    return new Image(ABSOLUTE_DEFAULT_IMAGE_PATH);
+                } catch (Exception ex) {
+                    System.err.println("Gagal memuat gambar fallback default absolut. Error: " + ex.getMessage());
+                    return null; // Jika bahkan gambar default gagal, kembalikan null
+                }
+            }
         }
 
         @Override
@@ -51,6 +92,7 @@ public class BioskopModel {
         }
     }
 
+    // --- Awal dari BioskopModel (seperti yang Anda berikan) ---
     private final BioskopDataStore dataStore;
     private Film filmTerpilih;
     private String jamTerpilih;
@@ -62,6 +104,7 @@ public class BioskopModel {
     private double uangDibayar;
 
     public BioskopModel() {
+        // Ini akan memanggil BioskopDataStore dan inisialisasi film di sana
         this.dataStore = new BioskopDataStore();
         resetTransaksi(); // Inisialisasi awal
     }
@@ -77,6 +120,8 @@ public class BioskopModel {
         this.uangDibayar = 0.0;
     }
 
+    // Perhatikan: getDaftarFilm() akan memanggil dataStore.getDaftarFilm()
+    // yang harus mengembalikan List<BioskopModel.Film>
     public List<Film> getDaftarFilm() {
         return dataStore.getDaftarFilm();
     }
@@ -202,6 +247,7 @@ public class BioskopModel {
         }
 
         // Tandai kursi sebagai terisi di data store
+        // Penting: pastikan BioskopDataStore.tandaiKursiTerisi menerima BioskopModel.Film
         dataStore.tandaiKursiTerisi(filmTerpilih, jamTerpilih, kursiTerpilih);
         return true;
     }
@@ -222,12 +268,12 @@ public class BioskopModel {
             }
             newFilm.addJamTayang(trimmedJam);
         }
-        dataStore.addFilm(newFilm);
+        dataStore.addFilm(newFilm); // Pastikan BioskopDataStore.addFilm menerima BioskopModel.Film
     }
 
     // Menghapus film (delegasi ke dataStore)
     public void removeFilm(Film film) throws BioskopException {
-        dataStore.removeFilm(film);
+        dataStore.removeFilm(film); // Pastikan BioskopDataStore.removeFilm menerima BioskopModel.Film
     }
 
     // Mendapatkan daftar metode pembayaran (delegasi ke dataStore)

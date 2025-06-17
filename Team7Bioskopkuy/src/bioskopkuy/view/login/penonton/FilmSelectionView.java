@@ -8,8 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image; // Import ini
-import javafx.scene.image.ImageView; // Import ini
+import javafx.scene.image.Image; // Import ini (tetap diperlukan)
+import javafx.scene.image.ImageView; // Import ini (tetap diperlukan)
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import java.io.File; // Import ini
+// import java.io.File; // TIDAK DIPERLUKAN LAGI, BISA DIHAPUS
 import java.util.List;
 
 public class FilmSelectionView {
@@ -115,25 +115,18 @@ public class FilmSelectionView {
             posterImageView.setPreserveRatio(true);
             posterImageView.setStyle("-fx-border-color: #B2D8D3; -fx-border-width: 1px;"); // Border untuk gambar
 
-            if (film.getImagePath() != null && !film.getImagePath().isEmpty()) {
-                try {
-                    // Muat gambar dari path lokal
-                    File file = new File(film.getImagePath());
-                    if (file.exists()) {
-                        Image image = new Image(file.toURI().toString());
-                        posterImageView.setImage(image);
-                    } else {
-                        System.err.println("Gambar tidak ditemukan di path: " + film.getImagePath());
-                        posterImageView.setImage(null); // Tampilkan kosong jika gambar tidak ada
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error loading image for " + film.getJudul() + ": " + e.getMessage());
-                    posterImageView.setImage(null);
-                }
+            // =================================================================================
+            // === BAGIAN KRITIS: GUNAKAN film.getPosterImage() BUKAN MEMUAT ULANG DARI PATH ===
+            // =================================================================================
+            Image poster = film.getPosterImage(); // Panggil metode yang sudah ada di BioskopModel.Film
+            if (poster != null) {
+                posterImageView.setImage(poster);
             } else {
-                posterImageView.setImage(null); // Tidak ada gambar jika path kosong
+                // Ini seharusnya jarang terjadi jika default_poster.jpeg ada dan jalurnya benar
+                System.err.println("Poster untuk film '" + film.getJudul() + "' tidak dapat dimuat (getPosterImage() mengembalikan null).");
+                // Opsional: set gambar placeholder jika getPosterImage() mengembalikan null
+                // posterImageView.setImage(new Image("file:///path/to/placeholder_error_image.png"));
             }
-
 
             VBox filmInfo = new VBox(8); // VBox untuk judul, harga, dan jam tayang
             filmInfo.setAlignment(Pos.CENTER_LEFT);

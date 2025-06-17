@@ -1,7 +1,7 @@
-package bioskopkuy.model;
+package bioskopkuy.model; // Pastikan package ini sama dengan BioskopModel.java
 
 import bioskopkuy.service.BioskopException;
-import java.io.File; // Import ini
+// import java.io.File; // Tidak diperlukan di sini
 import java.util.*;
 
 public class BioskopDataStore {
@@ -43,6 +43,7 @@ public class BioskopDataStore {
         }
     }
 
+    // Menggunakan BioskopModel.Film (karena definisi Film sekarang ada di sana)
     private final List<BioskopModel.Film> daftarFilm;
     private final Map<String, Set<String>> kursiTerisiMap; // Key: FilmJudul-JamTayang, Value: Set<KursiName>
 
@@ -56,9 +57,8 @@ public class BioskopDataStore {
 
     // Menginisialisasi data film dan metode pembayaran default
     private void initializeDefaultData() {
-        // Contoh: Jika ada gambar default, bisa dimasukkan di sini
-        // Misalnya, buat folder 'images' di root project dan masukkan gambar di sana
-        BioskopModel.Film film1 = new BioskopModel.Film("The Jungle of Basori", 50000.0, null); // Tambahkan null untuk imagePath
+
+        BioskopModel.Film film1 = new BioskopModel.Film("The Jungle of Basori", 50000.0, null);
         film1.addJamTayang("10:00");
         film1.addJamTayang("13:00");
         film1.addJamTayang("16:00");
@@ -76,7 +76,7 @@ public class BioskopDataStore {
         return Collections.unmodifiableList(daftarFilm);
     }
 
-    // Menambah film baru
+    // Menambah film baru - sekarang menerima BioskopModel.Film
     public void addFilm(BioskopModel.Film film) throws BioskopException {
         for (BioskopModel.Film existingFilm : daftarFilm) {
             if (existingFilm.getJudul().equalsIgnoreCase(film.getJudul())) {
@@ -86,7 +86,7 @@ public class BioskopDataStore {
         daftarFilm.add(film);
     }
 
-    // Menghapus film
+    // Menghapus film - sekarang menerima BioskopModel.Film
     public void removeFilm(BioskopModel.Film film) throws BioskopException {
         boolean removed = daftarFilm.remove(film);
         if (!removed) {
@@ -104,19 +104,19 @@ public class BioskopDataStore {
         }
     }
 
-    // Membuat kunci unik untuk kombinasi film dan jam tayang
+    // Membuat kunci unik untuk kombinasi film dan jam tayang - menerima BioskopModel.Film
     private String generateKursiKey(BioskopModel.Film film, String jam) {
         return film.getJudul() + "-" + jam;
     }
 
-    // Memeriksa apakah kursi sudah terisi
+    // Memeriksa apakah kursi sudah terisi - menerima BioskopModel.Film
     public boolean isKursiTerisi(BioskopModel.Film film, String jam, String kursiName) {
         String key = generateKursiKey(film, jam);
         Set<String> terisi = kursiTerisiMap.getOrDefault(key, Collections.emptySet());
         return terisi.contains(kursiName);
     }
 
-    // Menandai kursi sebagai terisi setelah pembayaran sukses
+    // Menandai kursi sebagai terisi setelah pembayaran sukses - menerima BioskopModel.Film
     public void tandaiKursiTerisi(BioskopModel.Film film, String jam, Set<String> kursiNames) {
         String key = generateKursiKey(film, jam);
         kursiTerisiMap.computeIfAbsent(key, _ -> new HashSet<>()).addAll(kursiNames);
