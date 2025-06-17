@@ -223,3 +223,5 @@ public class BioskopModel {
         hitungTotalHarga();
     }
 }
+
+//cek
