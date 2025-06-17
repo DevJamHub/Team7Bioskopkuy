@@ -13,7 +13,7 @@ public class BioskopModel {
         private final String judul;
         private final double hargaDasar;
         private final List<String> jamTayang; // Jam tayang dalam format HH:mm
-        private String imagePath; // Properti untuk path gambar
+        private final String imagePath; // Properti untuk path gambar
 
         // --- Variabel statis untuk jalur default absolut ---
         // Ganti ini dengan jalur absolut yang benar di komputer Anda
@@ -51,15 +51,6 @@ public class BioskopModel {
 
         public String getImagePath() {
             return imagePath;
-        }
-
-        public void setImagePath(String imagePath) {
-            // Logika untuk default path juga diterapkan saat setImagePath
-            if (imagePath == null || imagePath.isEmpty()) {
-                this.imagePath = ABSOLUTE_DEFAULT_IMAGE_PATH;
-            } else {
-                this.imagePath = imagePath;
-            }
         }
 
         /**
@@ -230,8 +221,8 @@ public class BioskopModel {
     }
 
     // Mendapatkan semua nama kursi dari data store (untuk visualisasi)
-    public List<String> getAllKursiNames() {
-        return dataStore.getAllKursiNames();
+    public void getAllKursiNames() {
+        dataStore.getAllKursiNames();
     }
 
     // Memproses transaksi pembayaran

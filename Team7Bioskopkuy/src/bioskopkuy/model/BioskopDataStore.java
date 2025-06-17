@@ -123,7 +123,7 @@ public class BioskopDataStore {
     }
 
     // Metode ini mungkin tidak perlu mengembalikan nilai, hanya sebagai referensi
-    public List<String> getAllKursiNames() {
+    public void getAllKursiNames() {
         List<String> allKursi = new ArrayList<>();
         char[] rows = {'A', 'B', 'C', 'D'}; // Ubah sesuai kebutuhan layout kursi
         int colCount = 10;
@@ -132,7 +132,6 @@ public class BioskopDataStore {
                 allKursi.add(String.valueOf(rowChar) + (colIdx + 1));
             }
         }
-        return allKursi; // Mengembalikan daftar semua nama kursi
     }
 
     public List<PaymentMethod> getDaftarMetodePembayaran() {

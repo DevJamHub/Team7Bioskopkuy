@@ -74,8 +74,8 @@ public class FilmSelectionView {
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
         // Efek hover
-        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> {
             if (controller.isAdminLoggedIn()) {
                 controller.kembaliKeAdminDashboard();
@@ -99,15 +99,7 @@ public class FilmSelectionView {
         }
 
         for (BioskopModel.Film film : films) {
-            HBox filmCard = new HBox(15); // Menggunakan HBox untuk menampung gambar dan info film
-            filmCard.setAlignment(Pos.CENTER_LEFT);
-            filmCard.setPadding(new Insets(15));
-            filmCard.setStyle("-fx-background-color: #E0F2F1;" +
-                    "-fx-background-radius: 10px;" +
-                    "-fx-border-radius: 10px;" +
-                    "-fx-border-color: #5AAAA0;" +
-                    "-fx-border-width: 1px;" +
-                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 3);");
+            HBox filmCard = getHBox();
 
             ImageView posterImageView = new ImageView();
             posterImageView.setFitWidth(100); // Ukuran poster
@@ -160,8 +152,8 @@ public class FilmSelectionView {
                             "-fx-background-radius: 5px;" +
                             "-fx-border-radius: 5px;" +
                             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);");
-                    jamButton.setOnMouseEntered(e -> jamButton.setStyle(jamButton.getStyle() + "-fx-background-color: #A3D8D0; -fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-                    jamButton.setOnMouseExited(e -> jamButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"));
+                    jamButton.setOnMouseEntered(_ -> jamButton.setStyle(jamButton.getStyle() + "-fx-background-color: #A3D8D0; -fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+                    jamButton.setOnMouseExited(_ -> jamButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"));
 
                     jamButton.setOnAction(_ -> controller.pilihFilmDanJam(film, jam));
                     jamTayangButtons.getChildren().add(jamButton);
@@ -171,6 +163,19 @@ public class FilmSelectionView {
             filmCard.getChildren().addAll(posterImageView, filmInfo); // Tambahkan poster ke kartu
             filmListPanel.getChildren().add(filmCard);
         }
+    }
+
+    private static HBox getHBox() {
+        HBox filmCard = new HBox(15); // Menggunakan HBox untuk menampung gambar dan info film
+        filmCard.setAlignment(Pos.CENTER_LEFT);
+        filmCard.setPadding(new Insets(15));
+        filmCard.setStyle("-fx-background-color: #E0F2F1;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-border-radius: 10px;" +
+                "-fx-border-color: #5AAAA0;" +
+                "-fx-border-width: 1px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 3);");
+        return filmCard;
     }
 
     public void showView() {

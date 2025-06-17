@@ -54,8 +54,8 @@ public class FilmManagementView {
         Button backButton = new Button("Kembali");
         backButton.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
-        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
-        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseEntered(_ -> backButton.setStyle("-fx-background-color: #D3E0E1; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
+        backButton.setOnMouseExited(_ -> backButton.setStyle("-fx-background-color: #F8F8F8; -fx-text-fill: #2C3E50; -fx-border-color: #5AAAA0; -fx-border-width: 1.5px; -fx-background-radius: 8px; -fx-border-radius: 8px;"));
         backButton.setOnAction(_ -> controller.kembaliKeAdminDashboard());
 
         Label titleLabel = new Label("Manajemen Film Bioskop");
@@ -65,15 +65,7 @@ public class FilmManagementView {
         root.setTop(topPanel);
         BorderPane.setMargin(topPanel, new Insets(0, 0, 25, 0));
 
-        VBox centerContent = new VBox(25); // Spasi antar bagian
-        centerContent.setAlignment(Pos.TOP_CENTER);
-        centerContent.setPadding(new Insets(30));
-        centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
-                "-fx-border-color: #5AAAA0;" +
-                "-fx-border-width: 2px;" +
-                "-fx-background-radius: 15px;" +
-                "-fx-border-radius: 15px;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 6);");
+        VBox centerContent = getVBox();
 
         Label tambahFilmTitle = new Label("Tambah Film Baru");
         tambahFilmTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
@@ -130,8 +122,8 @@ public class FilmManagementView {
         Button uploadImageButton = new Button("Upload Gambar");
         uploadImageButton.setFont(Font.font("Verdana", 16));
         uploadImageButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;");
-        uploadImageButton.setOnMouseEntered(e -> uploadImageButton.setStyle(uploadImageButton.getStyle() + "-fx-background-color: #7BD4C6;"));
-        uploadImageButton.setOnMouseExited(e -> uploadImageButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;"));
+        uploadImageButton.setOnMouseEntered(_ -> uploadImageButton.setStyle(uploadImageButton.getStyle() + "-fx-background-color: #7BD4C6;"));
+        uploadImageButton.setOnMouseExited(_ -> uploadImageButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1px; -fx-background-radius: 5px; -fx-border-radius: 5px;"));
         uploadImageButton.setOnAction(_ -> handleUploadImage());
 
         VBox imageInputContainer = new VBox(5, filmImageView, imagePathLabel, uploadImageButton);
@@ -151,8 +143,8 @@ public class FilmManagementView {
         tambahFilmButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         tambahFilmButton.setPrefSize(200, 50);
         tambahFilmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        tambahFilmButton.setOnMouseEntered(e -> tambahFilmButton.setStyle(tambahFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        tambahFilmButton.setOnMouseExited(e -> tambahFilmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        tambahFilmButton.setOnMouseEntered(_ -> tambahFilmButton.setStyle(tambahFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        tambahFilmButton.setOnMouseExited(_ -> tambahFilmButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-color: #388E3C; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         tambahFilmButton.setOnAction(_ -> handleTambahFilm());
 
         Label daftarFilmTitle = new Label("Daftar Film Saat Ini");
@@ -206,8 +198,8 @@ public class FilmManagementView {
         hapusFilmButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         hapusFilmButton.setPrefSize(250, 50);
         hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
-        hapusFilmButton.setOnMouseEntered(e -> hapusFilmButton.setStyle(hapusFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
-        hapusFilmButton.setOnMouseExited(e -> hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
+        hapusFilmButton.setOnMouseEntered(_ -> hapusFilmButton.setStyle(hapusFilmButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
+        hapusFilmButton.setOnMouseExited(_ -> hapusFilmButton.setStyle("-fx-background-color: #FF5555; -fx-text-fill: white; -fx-border-color: #D32F2F; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
         hapusFilmButton.setDisable(true); // Disable by default
         hapusFilmButton.setOnAction(_ -> handleHapusFilm());
 
@@ -220,6 +212,19 @@ public class FilmManagementView {
         root.setCenter(centerContent);
 
         scene = new Scene(root, 950, 850); // Ukuran scene lebih besar untuk mengakomodasi gambar
+    }
+
+    private static VBox getVBox() {
+        VBox centerContent = new VBox(25); // Spasi antar bagian
+        centerContent.setAlignment(Pos.TOP_CENTER);
+        centerContent.setPadding(new Insets(30));
+        centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
+                "-fx-border-color: #5AAAA0;" +
+                "-fx-border-width: 2px;" +
+                "-fx-background-radius: 15px;" +
+                "-fx-border-radius: 15px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 6);");
+        return centerContent;
     }
 
     private void handleUploadImage() {
