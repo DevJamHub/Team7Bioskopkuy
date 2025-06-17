@@ -91,7 +91,7 @@ public class SeatSelectionView {
         totalHargaLabel.setTextFill(Color.YELLOW);
 
         Button lanjutButton = new Button("Lanjut ke Pembayaran");
-        lanjutButton.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+        lanjutButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         lanjutButton.setPrefSize(280, 55);
         lanjutButton.setStyle("-fx-background-color: #FFD700;" +
                 "-fx-text-fill: #2C3E50;" +

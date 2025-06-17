@@ -69,7 +69,7 @@ public class AdminDashboardView {
 
         Button paymentMethodManagementButton = new Button("Manajemen Pembayaran");
         paymentMethodManagementButton.setPrefSize(300, 70);
-        paymentMethodManagementButton.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
+        paymentMethodManagementButton.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         paymentMethodManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);");
         paymentMethodManagementButton.setOnMouseEntered(_ -> paymentMethodManagementButton.setStyle(paymentMethodManagementButton.getStyle() + "-fx-scale-y: 1.05; -fx-scale-x: 1.05;"));
         paymentMethodManagementButton.setOnMouseExited(_ -> paymentMethodManagementButton.setStyle("-fx-background-color: #5AAAA0; -fx-text-fill: white; -fx-border-color: #3A6D65; -fx-border-width: 1.5px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
