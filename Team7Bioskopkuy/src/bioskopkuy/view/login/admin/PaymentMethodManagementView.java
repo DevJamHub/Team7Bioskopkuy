@@ -84,7 +84,8 @@ public class PaymentMethodManagementView {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    setText(method.toString());
+                    // Menggunakan method overloading getDisplayInfo dari controller
+                    setText(controller.getModel().getDisplayInfo(method));
                     setStyle("-fx-padding: 8px;");
                 }
             }

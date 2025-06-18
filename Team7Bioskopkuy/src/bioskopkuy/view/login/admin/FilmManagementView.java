@@ -173,7 +173,8 @@ public class FilmManagementView {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    filmInfoLabel.setText(film.getJudul() + " (Rp" + String.format("%,.0f", film.getHargaDasar()) + "/kursi) - Jam: " + String.join(", ", film.getJamTayang()));
+                    // Menggunakan getDisplayInfo() dari Film (yang sekarang extends AbstractEntity)
+                    filmInfoLabel.setText(controller.getModel().getDisplayInfo(film)); // Menggunakan method overloading di controller
                     if (film.getImagePath() != null && !film.getImagePath().isEmpty()) {
                         try {
                             Image image = new Image(new File(film.getImagePath()).toURI().toString(), true);
@@ -245,8 +246,8 @@ public class FilmManagementView {
             }
         } else {
             selectedImagePath = null;
+            filmImageView.setImage(null); // Ganti imageImageView dengan filmImageView
             imagePathLabel.setText("Belum ada gambar dipilih.");
-            filmImageView.setImage(null);
         }
     }
 
@@ -273,7 +274,7 @@ public class FilmManagementView {
             selectedImagePath = null;
             filmImageView.setImage(null);
             imagePathLabel.setText("Belum ada gambar dipilih.");
-            refreshFilmList(controller.getModel().getDaftarFilm());
+            refreshFilmList(controller.getModel().getAll()); // Menggunakan getAll() dari model
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Input Harga Tidak Valid", "Harga harus berupa angka yang valid.");
         }
@@ -290,7 +291,7 @@ public class FilmManagementView {
             Optional<ButtonType> result = confirmationAlert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 controller.hapusFilm(selectedFilm);
-                refreshFilmList(controller.getModel().getDaftarFilm());
+                refreshFilmList(controller.getModel().getAll()); // Menggunakan getAll() dari model
             }
         } else {
             showAlert(Alert.AlertType.WARNING, "Peringatan", "Pilih film yang ingin dihapus terlebih dahulu.");
@@ -311,7 +312,7 @@ public class FilmManagementView {
 
     public void showView() {
         stage.setTitle("BioskopKuy! - Manajemen Film");
-        refreshFilmList(controller.getModel().getDaftarFilm());
+        refreshFilmList(controller.getModel().getAll()); // Menggunakan getAll() dari model
         selectedImagePath = null;
         filmImageView.setImage(null);
         imagePathLabel.setText("Belum ada gambar dipilih.");

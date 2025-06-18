@@ -16,7 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import java.util.List;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledExecutorService; // Corrected typo
 import java.util.concurrent.TimeUnit;
 
 public class BioskopController {
@@ -202,7 +202,19 @@ public class BioskopController {
 
     public void tambahFilm(String judul, double harga, String jamTayang, String imagePath) {
         try {
-            model.addFilm(judul, harga, jamTayang, imagePath);
+            BioskopModel.Film newFilm = new BioskopModel.Film(judul, harga, imagePath);
+            String[] jams = jamTayang.split(",");
+            if (jams.length == 0 || (jams.length == 1 && jams[0].trim().isEmpty())) {
+                throw new BioskopException("Jam tayang tidak boleh kosong.");
+            }
+            for (String jam : jams) {
+                String trimmedJam = jam.trim();
+                if (!trimmedJam.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
+                    throw new BioskopException("Format jam tayang tidak valid: " + trimmedJam + ". Gunakan HH:mm (misal: 12:00, 14:30).");
+                }
+                newFilm.addJamTayang(trimmedJam);
+            }
+            model.add(newFilm); // Memanggil method add dari BioskopModel (implementasi IManagementService<Film>)
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Film '" + judul + "' berhasil ditambahkan.");
         } catch (BioskopException e) {
             showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
@@ -211,7 +223,7 @@ public class BioskopController {
 
     public void hapusFilm(BioskopModel.Film film) {
         try {
-            model.removeFilm(film);
+            model.remove(film); // Memanggil method remove dari BioskopModel (implementasi IManagementService<Film>)
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Film '" + film.getJudul() + "' berhasil dihapus.");
         } catch (BioskopException e) {
             showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
@@ -219,12 +231,13 @@ public class BioskopController {
     }
 
     public List<BioskopDataStore.PaymentMethod> getDaftarMetodePembayaran() {
+        // Memanggil metode reguler di BioskopModel, bukan implementasi interface getAll()
         return model.getDaftarMetodePembayaran();
     }
 
     public void tambahMetodePembayaran(String name, int discountPercent, String discountDescription) {
         try {
-            model.addMetodePembayaran(name, discountPercent, discountDescription);
+            model.addMetodePembayaran(name, discountPercent, discountDescription); // Memanggil metode reguler di BioskopModel
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Metode pembayaran '" + name + "' berhasil ditambahkan.");
             paymentMethodManagementView.refreshMetodePembayaranList();
             paymentSelectionView.updateMetodePembayaranButtons();
@@ -235,7 +248,7 @@ public class BioskopController {
 
     public void hapusMetodePembayaran(BioskopDataStore.PaymentMethod methodToRemove) {
         try {
-            model.removeMetodePembayaran(methodToRemove);
+            model.removeMetodePembayaran(methodToRemove); // Memanggil metode reguler di BioskopModel
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Metode pembayaran '" + methodToRemove.getName() + "' berhasil dihapus.");
             paymentMethodManagementView.refreshMetodePembayaranList();
             paymentSelectionView.updateMetodePembayaranButtons();
@@ -246,7 +259,7 @@ public class BioskopController {
 
     public void editMetodePembayaran(BioskopDataStore.PaymentMethod originalMethod, String newName, int newDiscountPercent, String newDiscountDescription) {
         try {
-            model.updateMetodePembayaran(originalMethod, newName, newDiscountPercent, newDiscountDescription);
+            model.updateMetodePembayaran(originalMethod, newName, newDiscountPercent, newDiscountDescription); // Memanggil metode reguler di BioskopModel
             showAlert(Alert.AlertType.INFORMATION, "Sukses", "Metode pembayaran '" + originalMethod.getName() + "' berhasil diperbarui.");
             paymentMethodManagementView.refreshMetodePembayaranList();
             paymentSelectionView.updateMetodePembayaranButtons();

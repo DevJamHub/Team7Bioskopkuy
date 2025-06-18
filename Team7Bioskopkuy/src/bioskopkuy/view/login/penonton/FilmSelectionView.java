@@ -84,7 +84,7 @@ public class FilmSelectionView {
     public void refreshFilmList() {
         filmListPanel.getChildren().clear();
 
-        List<BioskopModel.Film> films = controller.getModel().getDaftarFilm();
+        List<BioskopModel.Film> films = controller.getModel().getAll(); // Menggunakan getAll() dari IManagementService di model
         if (films.isEmpty()) {
             Label noFilmLabel = new Label("Belum ada film yang tersedia saat ini.");
             noFilmLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 22));
@@ -112,7 +112,8 @@ public class FilmSelectionView {
             VBox filmInfo = new VBox(8);
             filmInfo.setAlignment(Pos.CENTER_LEFT);
 
-            Label filmTitleLabel = new Label(film.getJudul());
+            // Menggunakan getDisplayInfo() dari Film (polymorphism)
+            Label filmTitleLabel = new Label(film.getJudul()); // Tetap gunakan getJudul untuk judul utama
             filmTitleLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
             filmTitleLabel.setTextFill(Color.web("#3A6D65"));
 

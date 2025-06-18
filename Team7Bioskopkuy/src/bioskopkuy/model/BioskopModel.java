@@ -1,16 +1,20 @@
 package bioskopkuy.model;
 
 import bioskopkuy.service.BioskopException;
+import bioskopkuy.service.IManagementService;
 import javafx.scene.image.Image;
 import java.text.NumberFormat;
 import java.util.*;
 import java.io.FileInputStream;
 import java.io.File;
 
-public class BioskopModel {
+// Kita akan mengimplementasikan IManagementService untuk Film secara eksplisit
+// dan menggunakan metode yang sudah ada untuk PaymentMethod.
+// Ini untuk menghindari ambiguitas getAll() dari dua implementasi interface yang sama.
+public class BioskopModel implements IManagementService<BioskopModel.Film> { // Hanya implementasikan untuk Film
 
-    public static class Film {
-        private final String judul;
+    // Inner class Film sekarang extend AbstractEntity
+    public static class Film extends AbstractEntity {
         private final double hargaDasar;
         private final List<String> jamTayang;
         private final String imagePath;
@@ -18,7 +22,7 @@ public class BioskopModel {
         private static final String ABSOLUTE_DEFAULT_IMAGE_PATH = "file:///Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/login/images/default_poster.jpeg";
 
         public Film(String judul, double hargaDasar, String imagePath) {
-            this.judul = judul;
+            super(judul, judul); // ID dan name sama-sama judul untuk Film
             this.hargaDasar = hargaDasar;
             this.jamTayang = new ArrayList<>();
             if (imagePath == null || imagePath.isEmpty()) {
@@ -29,7 +33,7 @@ public class BioskopModel {
         }
 
         public String getJudul() {
-            return judul;
+            return name; // Judul sekarang diambil dari AbstractEntity.name
         }
 
         public double getHargaDasar() {
@@ -72,15 +76,15 @@ public class BioskopModel {
                             loadedImage = new Image(fis);
                         }
                     } else {
-                        System.err.println("File poster tidak ditemukan atau bukan file valid: " + filePath + " untuk film: " + judul);
+                        System.err.println("File poster tidak ditemukan atau bukan file valid: " + filePath + " untuk film: " + name); // Menggunakan name dari AbstractEntity
                     }
                 } catch (Exception e) {
-                    System.err.println("Gagal memuat gambar untuk film '" + judul + "' dari jalur: " + this.imagePath + ". Error: " + e.getMessage());
+                    System.err.println("Gagal memuat gambar untuk film '" + name + "' dari jalur: " + this.imagePath + ". Error: " + e.getMessage()); // Menggunakan name dari AbstractEntity
                 }
             }
 
             if (loadedImage == null) {
-                System.out.println("Mencoba memuat gambar default untuk film '" + judul + "'...");
+                System.out.println("Mencoba memuat gambar default untuk film '" + name + "'..."); // Menggunakan name dari AbstractEntity
                 try {
                     String defaultFilePath = ABSOLUTE_DEFAULT_IMAGE_PATH;
                     defaultFilePath = defaultFilePath.substring(7);
@@ -106,7 +110,12 @@ public class BioskopModel {
 
         @Override
         public String toString() {
-            return judul + " (Rp" + String.format("%,.0f", hargaDasar) + ")";
+            return name + " (Rp" + String.format("%,.0f", hargaDasar) + ")"; // Menggunakan name dari AbstractEntity
+        }
+
+        @Override
+        public String getDisplayInfo() { // Implementasi abstract method dari AbstractEntity
+            return getJudul() + " (Rp" + String.format("%,.0f", hargaDasar) + "/kursi) - Jam: " + String.join(", ", getJamTayang());
         }
     }
 
@@ -122,6 +131,20 @@ public class BioskopModel {
 
     public BioskopModel() {
         this.dataStore = new BioskopDataStore();
+        BioskopModel.Film film1 = new BioskopModel.Film("The Jungle of Basori", 50000.0, null);
+        film1.addJamTayang("10:00");
+        film1.addJamTayang("13:00");
+        film1.addJamTayang("16:00");
+        film1.addJamTayang("19:00");
+        // Tambahkan film default hanya jika belum ada film
+        if (dataStore.getDaftarFilm().isEmpty()) {
+            try {
+                // Memanggil method 'add' dari IManagementService<Film> yang diimplementasikan oleh BioskopModel
+                add(film1);
+            } catch (BioskopException e) {
+                System.err.println("Error adding default film: " + e.getMessage());
+            }
+        }
         resetTransaksi();
     }
 
@@ -135,8 +158,42 @@ public class BioskopModel {
         this.uangDibayar = 0.0;
     }
 
-    public List<Film> getDaftarFilm() {
+    // Implementasi IManagementService<Film>
+    @Override
+    public void add(Film item) throws BioskopException {
+        dataStore.addFilm(item);
+    }
+
+    @Override
+    public void remove(Film item) throws BioskopException {
+        dataStore.removeFilm(item);
+    }
+
+    @Override
+    public List<Film> getAll() {
         return dataStore.getDaftarFilm();
+    }
+
+    // Metode manajemen PaymentMethod (metode reguler, tidak dari IManagementService)
+    public void addMetodePembayaran(String name, int discountPercent, String discountDescription) throws BioskopException {
+        dataStore.addMetodePembayaran(name, discountPercent, discountDescription);
+    }
+
+    public void removeMetodePembayaran(BioskopDataStore.PaymentMethod methodToRemove) throws BioskopException {
+        dataStore.removeMetodePembayaran(methodToRemove);
+    }
+
+    public void updateMetodePembayaran(BioskopDataStore.PaymentMethod originalMethod, String newName, int newDiscountPercent, String newDiscountDescription) throws BioskopException {
+        BioskopDataStore.PaymentMethod updatedMethod = dataStore.updateMetodePembayaran(originalMethod, newName, newDiscountPercent, newDiscountDescription);
+        if (metodePembayaranTerpilih == originalMethod) {
+            setMetodePembayaranTerpilih(updatedMethod);
+        }
+        hitungTotalHarga();
+    }
+
+    // Metode getter/setter transaksi dan lainnya
+    public List<BioskopDataStore.PaymentMethod> getDaftarMetodePembayaran() {
+        return dataStore.getDaftarMetodePembayaran();
     }
 
     public Film getFilmTerpilih() {
@@ -253,44 +310,12 @@ public class BioskopModel {
         return true;
     }
 
-    public void addFilm(String judul, double harga, String jamTayang, String imagePath) throws BioskopException {
-        Film newFilm = new Film(judul, harga, imagePath);
-        String[] jams = jamTayang.split(",");
-        if (jams.length == 0 || (jams.length == 1 && jams[0].trim().isEmpty())) {
-            throw new BioskopException("Jam tayang tidak boleh kosong.");
-        }
-        for (String jam : jams) {
-            String trimmedJam = jam.trim();
-            if (!trimmedJam.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
-                throw new BioskopException("Format jam tayang tidak valid: " + trimmedJam + ". Gunakan HH:mm (misal: 12:00, 14:30).");
-            }
-            newFilm.addJamTayang(trimmedJam);
-        }
-        dataStore.addFilm(newFilm);
+    // Overloading method contoh
+    public String getDisplayInfo(Film film) {
+        return film.getDisplayInfo();
     }
 
-    public void removeFilm(Film film) throws BioskopException {
-        dataStore.removeFilm(film);
-    }
-
-    public List<BioskopDataStore.PaymentMethod> getDaftarMetodePembayaran() {
-        return dataStore.getDaftarMetodePembayaran();
-    }
-
-    public void addMetodePembayaran(String name, int discountPercent, String discountDescription) throws BioskopException {
-        dataStore.addMetodePembayaran(name, discountPercent, discountDescription);
-    }
-
-    public void removeMetodePembayaran(BioskopDataStore.PaymentMethod methodToRemove) throws BioskopException {
-        dataStore.removeMetodePembayaran(methodToRemove);
-    }
-
-    public void updateMetodePembayaran(BioskopDataStore.PaymentMethod originalMethod, String newName, int newDiscountPercent, String newDiscountDescription) throws BioskopException {
-        BioskopDataStore.PaymentMethod updatedMethod = dataStore.updateMetodePembayaran(originalMethod, newName, newDiscountPercent, newDiscountDescription);
-
-        if (metodePembayaranTerpilih == originalMethod) {
-            setMetodePembayaranTerpilih(updatedMethod);
-        }
-        hitungTotalHarga();
+    public String getDisplayInfo(BioskopDataStore.PaymentMethod method) {
+        return method.getName() + " (" + method.getDiscountPercent() + "% Off)";
     }
 }
