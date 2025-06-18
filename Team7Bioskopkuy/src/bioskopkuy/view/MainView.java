@@ -1,4 +1,4 @@
-package bioskopkuy.view.login;
+package bioskopkuy.view;
 
 import bioskopkuy.controller.BioskopController;
 import javafx.collections.FXCollections;

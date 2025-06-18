@@ -1,4 +1,4 @@
-package bioskopkuy.view.login.admin;
+package bioskopkuy.view.admin;
 
 import bioskopkuy.controller.BioskopController;
 import bioskopkuy.model.BioskopDataStore;

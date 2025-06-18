@@ -1,4 +1,4 @@
-package bioskopkuy.view.login.penonton;
+package bioskopkuy.view.penonton;
 
 import bioskopkuy.controller.BioskopController;
 import bioskopkuy.model.BioskopDataStore;
