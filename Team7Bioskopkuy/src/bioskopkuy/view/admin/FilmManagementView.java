@@ -150,8 +150,15 @@ public class FilmManagementView {
         daftarFilmTitle.setPadding(new Insets(30, 0, 10, 0));
 
         filmListView = new ListView<>();
-        filmListView.setPrefHeight(250);
+        filmListView.setMaxHeight(Double.MAX_VALUE);
         filmListView.setPlaceholder(new Label("Tidak ada film yang ditambahkan."));
+
+// Bungkus ListView dengan ScrollPane
+        ScrollPane scrollableList = new ScrollPane(filmListView);
+        scrollableList.setFitToWidth(true);
+        scrollableList.setPrefHeight(300); // atau ubah sesuai kebutuhan
+        scrollableList.setStyle("-fx-background-color:transparent;");
+
         filmListView.setStyle("-fx-font-size: 16px; -fx-background-color: #FFFFFF; -fx-border-color: #B2D8D3; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;");
         filmListView.setCellFactory(_ -> new ListCell<>() {
             private final HBox hbox = new HBox(10);
@@ -204,7 +211,7 @@ public class FilmManagementView {
 
         centerContent.getChildren().addAll(
                 tambahFilmTitle, formGrid, tambahFilmButton,
-                daftarFilmTitle, filmListView, hapusFilmButton
+                daftarFilmTitle, scrollableList, hapusFilmButton
         );
         root.setCenter(centerContent);
 
@@ -215,12 +222,12 @@ public class FilmManagementView {
         VBox centerContent = new VBox(25);
         centerContent.setAlignment(Pos.TOP_CENTER);
         centerContent.setPadding(new Insets(30));
-        centerContent.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
-                "-fx-border-color: #5AAAA0;" +
-                "-fx-border-width: 2px;" +
-                "-fx-background-radius: 15px;" +
-                "-fx-border-radius: 15px;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 6);");
+        centerContent.setStyle("-fx-background-color: linear-gradient(to bottom right, #F0FFFC, #A5F3EB, #5AAAA0);" +
+                "-fx-background-radius: 20px;" +
+                "-fx-border-radius: 20px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 6);" +
+                "-fx-padding: 40px;"
+        );
         return centerContent;
     }
 

@@ -18,8 +18,7 @@ public class BioskopModel implements IManagementService<BioskopModel.Film> { // 
         private final double hargaDasar;
         private final List<String> jamTayang;
         private final String imagePath;
-
-        private static final String ABSOLUTE_DEFAULT_IMAGE_PATH = "file:///Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/login/images/default_poster.jpeg";
+        private static final String ABSOLUTE_DEFAULT_IMAGE_PATH = "file:///Users/sigitnovriyy/Documents/MATAKULIAH/SEMESTER 2/PBO/TRY/Team7Bioskopkuy/src/bioskopkuy/view/images/default_poster.jpeg";
 
         public Film(String judul, double hargaDasar, String imagePath) {
             super(judul, judul); // ID dan name sama-sama judul untuk Film

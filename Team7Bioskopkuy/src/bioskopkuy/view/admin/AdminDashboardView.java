@@ -47,12 +47,12 @@ public class AdminDashboardView {
         VBox optionsPanel = new VBox(25);
         optionsPanel.setAlignment(Pos.CENTER);
         optionsPanel.setPadding(new Insets(40));
-        optionsPanel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9);" +
-                "-fx-border-color: #5AAAA0;" +
-                "-fx-border-width: 2px;" +
-                "-fx-background-radius: 15px;" +
-                "-fx-border-radius: 15px;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 6);");
+        optionsPanel.setStyle("-fx-background-color: linear-gradient(to bottom right, #F0FFFC, #A5F3EB, #5AAAA0);" +
+                "-fx-background-radius: 20px;" +
+                "-fx-border-radius: 20px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 6);" +
+                "-fx-padding: 40px;"
+        );
 
         Label titleLabel = new Label("Admin Dashboard");
         titleLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 34));

@@ -128,11 +128,12 @@ public class MainView {
         VBox content = new VBox(25);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(60));
-        content.setStyle("-fx-background-color: rgba(255, 255, 255, 0.95);" +
-                "-fx-background-radius: 20px;" +
-                "-fx-border-radius: 20px;" +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0, 0, 8);" +
-                "-fx-padding: 40px;");
+        content.setStyle("-fx-background-color: linear-gradient(to bottom right, #F0FFFC, #A5F3EB, #5AAAA0);" +
+                        "-fx-background-radius: 20px;" +
+                        "-fx-border-radius: 20px;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 6);" +
+                        "-fx-padding: 40px;"
+        );
         return content;
     }
 
