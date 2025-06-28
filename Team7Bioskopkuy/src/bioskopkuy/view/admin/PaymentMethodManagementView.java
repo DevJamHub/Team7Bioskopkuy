@@ -110,8 +110,12 @@ public class PaymentMethodManagementView {
 
         VBox formPanel = new VBox(15);
         formPanel.setPadding(new Insets(20));
-        formPanel.setStyle("-fx-border-color: #5AAAA0; -fx-border-width: 1px; -fx-padding: 15px; -fx-background-color: #E0F2F1; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-
+        formPanel.setStyle("-fx-background-color: linear-gradient(to bottom right, #F0FFFC, #A5F3EB, #5AAAA0);" +
+                "-fx-background-radius: 20px;" +
+                "-fx-border-radius: 20px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 6);" +
+                "-fx-padding: 40px;"
+        );
         Label formTitle = new Label("Formulir Metode Pembayaran");
         formTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
         formTitle.setTextFill(Color.web("#3A6D65"));

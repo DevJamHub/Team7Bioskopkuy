@@ -37,8 +37,12 @@ public class SeatSelectionView {
     private void initialize() {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(25));
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #5AAAA0, #7BD4C6);");
-
+        root.setStyle("-fx-background-color: linear-gradient(to bottom right, #F0FFFC, #A5F3EB, #5AAAA0);" +
+                "-fx-background-radius: 20px;" +
+                "-fx-border-radius: 20px;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 6);" +
+                "-fx-padding: 40px;"
+        );
         HBox topPanel = new HBox(20);
         topPanel.setAlignment(Pos.CENTER_LEFT);
         Button backButton = new Button("Kembali");
