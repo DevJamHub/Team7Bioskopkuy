@@ -50,7 +50,7 @@ public class FilmSelectionView {
         titleLabel.setTextFill(Color.web("#2C3E50")); // Mengatur warna teks
 
         // Ikon troli checkout
-        ImageView cartIcon = new ImageView(new Image("file:src/bioskopkuy/view/images/troli.jpeg")); // Mengambil gambar troli
+        ImageView cartIcon = new ImageView(new Image("file:src/bioskopkuy/view/images/Troli.png")); // Mengambil gambar troli
         cartIcon.setFitWidth(80); // Mengatur lebar ikon
         cartIcon.setFitHeight(80); // Mengatur tinggi ikon
         cartIcon.setPreserveRatio(true); // Mempertahankan rasio gambar
